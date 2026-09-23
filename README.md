@@ -4,11 +4,12 @@ Working Zigbee baseline for the non-Sense Seeed XIAO nRF52840 using:
 
 - nRF Connect SDK 2.6.0
 - Zephyr board `xiao_ble`
-- Nordic's Zigbee light-switch application logic, maintained locally
+- a small standalone Zigbee button application
 
-This cleanup does not implement the final two-button remote behavior. It keeps
-the known-good commissioning, USB logging, button aliases, and persistent
-Zigbee state as a stable starting point.
+This application currently detects one button's single and double presses. It
+keeps the known-good commissioning, USB logging, and persistent Zigbee state as
+a stable starting point. The detected actions are logged locally until a
+generic Zigbee action representation is selected.
 
 ## Build
 
@@ -53,19 +54,21 @@ Pass the actual mount point for a non-macOS host or a differently named volume.
 Do not replace this partition map without verifying the generated partitions
 and ELF address.
 
-## XIAO buttons
+## XIAO button
 
-The board overlay maps the Nordic sample's four logical buttons:
+Connect one momentary button between XIAO D1 and GND. The overlay enables the
+nRF52840 internal pull-up, so the button is active low:
 
-| Logical button | XIAO pin | MCU pin |
+| Function | XIAO pin | MCU pin |
 |---|---|---|
 | Button 1 | D1 | P0.03 |
-| Button 2 | D2 | P0.28 |
-| Button 3 / sleepy enable | D3 | P0.29 |
-| Button 4 / factory reset | D4 | P0.04 |
 
 The same overlay selects `timer2` for the Zigbee timer. The extra crypto and
 MPSL settings are in `prj.conf`.
+
+Single and double actions are currently reported over USB serial. The button
+backend is interrupt-driven; a short debounce filter and asynchronous double
+press window avoid blocking the Zigbee stack.
 
 See `docs/NEXT_STEPS.md` for the planned low-power two-button evolution.
 

@@ -7,13 +7,14 @@ Do these in order. Avoid changing several variables at once.
 - Build the preserved Zigbee baseline for `xiao_ble`.
 - Flash UF2.
 - Confirm boot/logging.
-- Confirm Button 1 interrupt works.
+- Confirm Button 1 single and double actions are logged.
 - Pair with Zigbee2MQTT.
 - Confirm the device remains joined across reset.
 
 ## Phase 2 — sleepy operation
 
-Use the stock sample's Button 3 boot behavior first.
+Keep the current one-button application awake while validating the action
+timing and Zigbee behavior.
 
 Measure current in:
 - awake/commissioning
