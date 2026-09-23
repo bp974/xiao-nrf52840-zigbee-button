@@ -24,9 +24,6 @@
         io-channels = <&adc 7>;
     };
 
-    battery_enable: battery-enable {
-        gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
-    };
 };
 
 &adc {
@@ -41,6 +38,15 @@
         zephyr,input-positive = <NRF_SAADC_AIN7>;
         zephyr,resolution = <12>;
         zephyr,oversampling = <4>;
+    };
+};
+
+&gpio0 {
+    battery-enable-hog {
+        gpio-hog;
+        gpios = <14 GPIO_ACTIVE_LOW>;
+        output-low;
+        line-name = "Battery divider enable";
     };
 };
 

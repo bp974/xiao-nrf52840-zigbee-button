@@ -3,7 +3,6 @@
 
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/adc.h>
-#include <zephyr/drivers/gpio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
 
@@ -22,8 +21,6 @@ LOG_MODULE_REGISTER(battery, LOG_LEVEL_INF);
 
 static const struct adc_dt_spec battery_adc =
 	ADC_DT_SPEC_GET(DT_PATH(zephyr_user));
-static const struct gpio_dt_spec battery_enable =
-	GPIO_DT_SPEC_GET(DT_NODELABEL(battery_enable), gpios);
 static struct k_work_delayable battery_work;
 
 static zb_uint8_t battery_voltage_attr =
@@ -53,7 +50,7 @@ ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_POWER_CONFIG_BATTERY_VOLTAGE_MIN_THRESHOLD_ID
 	&battery_voltage_min_threshold_attr, ),
 ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_POWER_CONFIG_BATTERY_PERCENTAGE_REMAINING_ID(
 	&battery_percentage_attr, ),
-ZB_ZCL_FINISH_DECLARE_ATTRIB_LIST
+ZB_ZCL_FINISH_DECLARE_ATTRIB_LIST;
 
 static zb_uint8_t voltage_to_percentage(uint32_t millivolts)
 {
@@ -180,17 +177,7 @@ int battery_init(void)
 	if (!adc_is_ready_dt(&battery_adc)) {
 		return -ENODEV;
 	}
-	if (!gpio_is_ready_dt(&battery_enable)) {
-		return -ENODEV;
-	}
-
 	err = adc_channel_setup_dt(&battery_adc);
-	if (err) {
-		return err;
-	}
-
-	/* Active-low enable keeps the XIAO battery divider connected. */
-	err = gpio_pin_configure_dt(&battery_enable, GPIO_OUTPUT_ACTIVE);
 	if (err) {
 		return err;
 	}
