@@ -22,5 +22,10 @@ if [[ ! -d "$DEST" ]]; then
     exit 1
 fi
 
-cp "$UF2" "$DEST/"
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    # UF2 volumes do not support macOS extended attributes.
+    cp -X "$UF2" "$DEST/"
+else
+    cp "$UF2" "$DEST/"
+fi
 echo "Copied $UF2 to $DEST"
