@@ -18,16 +18,25 @@
 LOG_MODULE_REGISTER(app, LOG_LEVEL_INF);
 
 struct zb_device_ctx {
-	zb_zcl_basic_attrs_t basic_attr;
+	zb_zcl_basic_attrs_ext_t basic_attr;
 	zb_zcl_identify_attrs_t identify_attr;
 };
 
 static struct zb_device_ctx dev_ctx;
 
-ZB_ZCL_DECLARE_BASIC_SERVER_ATTRIB_LIST(
+ZB_ZCL_DECLARE_BASIC_ATTRIB_LIST_EXT(
 	basic_server_attr_list,
 	&dev_ctx.basic_attr.zcl_version,
-	&dev_ctx.basic_attr.power_source);
+	&dev_ctx.basic_attr.app_version,
+	&dev_ctx.basic_attr.stack_version,
+	&dev_ctx.basic_attr.hw_version,
+	dev_ctx.basic_attr.mf_name,
+	dev_ctx.basic_attr.model_id,
+	dev_ctx.basic_attr.date_code,
+	&dev_ctx.basic_attr.power_source,
+	dev_ctx.basic_attr.location_id,
+	&dev_ctx.basic_attr.ph_env,
+	dev_ctx.basic_attr.sw_ver);
 
 ZB_ZCL_DECLARE_IDENTIFY_SERVER_ATTRIB_LIST(
 	identify_server_attr_list,
@@ -44,6 +53,16 @@ ZBOSS_DECLARE_DEVICE_CTX_1_EP(button_remote_ctx, button_remote_ep);
 static void app_clusters_attr_init(void)
 {
 	dev_ctx.basic_attr.zcl_version = ZB_ZCL_VERSION;
+	dev_ctx.basic_attr.app_version = 1;
+	dev_ctx.basic_attr.stack_version = 1;
+	dev_ctx.basic_attr.hw_version = 1;
+	dev_ctx.basic_attr.date_code[0] = 0;
+	dev_ctx.basic_attr.location_id[0] = 0;
+	dev_ctx.basic_attr.sw_ver = 1;
+	ZB_ZCL_SET_STRING_VAL(dev_ctx.basic_attr.mf_name,
+		"Broskie Applications", ZB_ZCL_STRING_CONST_SIZE("Broskie Applications"));
+	ZB_ZCL_SET_STRING_VAL(dev_ctx.basic_attr.model_id,
+		"XIAO-Zigbee-Button", ZB_ZCL_STRING_CONST_SIZE("XIAO-Zigbee-Button"));
 	dev_ctx.basic_attr.power_source = ZB_ZCL_BASIC_POWER_SOURCE_UNKNOWN;
 	dev_ctx.identify_attr.identify_time =
 		ZB_ZCL_IDENTIFY_IDENTIFY_TIME_DEFAULT_VALUE;

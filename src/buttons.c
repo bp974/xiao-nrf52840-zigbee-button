@@ -8,12 +8,15 @@
 #define BUTTON_MASK                 DK_BTN1_MSK
 #define BUTTON_DEBOUNCE_MS          30
 #define DOUBLE_PRESS_WINDOW_MS      350
+#define HOLD_TIME_MS                600
 
 LOG_MODULE_REGISTER(buttons, LOG_LEVEL_INF);
 
 static button_action_handler_t action_handler;
 static struct k_work_delayable single_press_work;
+static struct k_work_delayable hold_work;
 static bool button_pressed;
+static bool hold_triggered;
 static uint8_t click_count;
 static int64_t last_transition_ms = -BUTTON_DEBOUNCE_MS;
 
@@ -31,6 +34,18 @@ static void single_press_work_fn(struct k_work *work)
 	if (click_count == 1U) {
 		click_count = 0U;
 		emit_action(BUTTON_ACTION_SINGLE);
+	}
+}
+
+static void hold_work_fn(struct k_work *work)
+{
+	ARG_UNUSED(work);
+
+	if (button_pressed && !hold_triggered) {
+		hold_triggered = true;
+		click_count = 0U;
+		(void)k_work_cancel_delayable(&single_press_work);
+		emit_action(BUTTON_ACTION_HOLD);
 	}
 }
 
@@ -55,8 +70,17 @@ static void button_changed(uint32_t button_state, uint32_t has_changed)
 	}
 	button_pressed = pressed;
 
-	/* Classify clicks on release so a held button is not an action. */
 	if (button_pressed) {
+		k_work_reschedule(&hold_work, K_MSEC(HOLD_TIME_MS));
+		return;
+	}
+
+	(void)k_work_cancel_delayable(&hold_work);
+	if (hold_triggered) {
+		hold_triggered = false;
+		click_count = 0U;
+		(void)k_work_cancel_delayable(&single_press_work);
+		emit_action(BUTTON_ACTION_RELEASE);
 		return;
 	}
 
@@ -75,6 +99,7 @@ int buttons_init(button_action_handler_t handler)
 {
 	action_handler = handler;
 	k_work_init_delayable(&single_press_work, single_press_work_fn);
+	k_work_init_delayable(&hold_work, hold_work_fn);
 
 	return dk_buttons_init(button_changed);
 }

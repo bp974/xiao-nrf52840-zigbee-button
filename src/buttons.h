@@ -4,6 +4,8 @@
 enum button_action {
 	BUTTON_ACTION_SINGLE,
 	BUTTON_ACTION_DOUBLE,
+	BUTTON_ACTION_HOLD,
+	BUTTON_ACTION_RELEASE,
 };
 
 typedef void (*button_action_handler_t)(enum button_action action);

@@ -66,9 +66,18 @@ nRF52840 internal pull-up, so the button is active low:
 The same overlay selects `timer2` for the Zigbee timer. The extra crypto and
 MPSL settings are in `prj.conf`.
 
-Single and double actions are currently reported over USB serial. The button
-backend is interrupt-driven; a short debounce filter and asynchronous double
-press window avoid blocking the Zigbee stack.
+The button actions are sent using the standard Zigbee clusters expected by the
+project's Zigbee2MQTT converter:
+
+| Gesture | Zigbee command | Converter action |
+|---|---|---|
+| Single press | On/Off Toggle | `single` |
+| Double press | On/Off On | `double` |
+| Long press | Level Control Move Up | `hold` |
+| Release after long press | Level Control Stop | `release` |
+
+The button backend is interrupt-driven; debounce, gesture timing, and command
+submission are asynchronous so they do not block the Zigbee stack.
 
 See `docs/NEXT_STEPS.md` for the planned low-power two-button evolution.
 
