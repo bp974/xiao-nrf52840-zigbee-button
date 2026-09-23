@@ -131,26 +131,32 @@ static int read_battery(uint32_t *millivolts, int32_t *adc_millivolts)
 
 static void battery_apply_zigbee(zb_bufid_t bufid)
 {
-	zb_zcl_status_t status;
+	zb_zcl_status_t voltage_status;
+	zb_zcl_status_t percentage_status;
 
 	ZVUNUSED(bufid);
 
-	status = zb_zcl_set_attr_val(
+	voltage_status = zb_zcl_set_attr_val(
 		BUTTON_REMOTE_ENDPOINT, ZB_ZCL_CLUSTER_ID_POWER_CONFIG,
 		ZB_ZCL_CLUSTER_SERVER_ROLE,
 		ZB_ZCL_ATTR_POWER_CONFIG_BATTERY_VOLTAGE_ID,
 		&battery_voltage_attr, ZB_FALSE);
-	if (status != RET_OK) {
-		LOG_ERR("Failed to update battery voltage attribute: %d", status);
-	}
-
-	status = zb_zcl_set_attr_val(
+	percentage_status = zb_zcl_set_attr_val(
 		BUTTON_REMOTE_ENDPOINT, ZB_ZCL_CLUSTER_ID_POWER_CONFIG,
 		ZB_ZCL_CLUSTER_SERVER_ROLE,
 		ZB_ZCL_ATTR_POWER_CONFIG_BATTERY_PERCENTAGE_REMAINING_ID,
 		&battery_percentage_attr, ZB_FALSE);
-	if (status != RET_OK) {
-		LOG_ERR("Failed to update battery percentage attribute: %d", status);
+
+	LOG_INF("Battery ZCL update: voltage=%u (%u mV), status=%d; percentage=%u (%u%%), status=%d",
+		battery_voltage_attr, battery_voltage_attr * 100U, voltage_status,
+		battery_percentage_attr, battery_percentage_attr / 2U,
+		percentage_status);
+
+	if (voltage_status != RET_OK) {
+		LOG_ERR("Failed to update battery voltage attribute: %d", voltage_status);
+	}
+	if (percentage_status != RET_OK) {
+		LOG_ERR("Failed to update battery percentage attribute: %d", percentage_status);
 	}
 }
 

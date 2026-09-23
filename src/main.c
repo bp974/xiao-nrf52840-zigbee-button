@@ -76,6 +76,16 @@ static void app_clusters_attr_init(void)
 
 void zboss_signal_handler(zb_bufid_t bufid)
 {
+	zb_zdo_app_signal_hdr_t *sig_hndler = NULL;
+	zb_zdo_app_signal_type_t sig = zb_get_app_signal(bufid, &sig_hndler);
+	zb_ret_t status = ZB_GET_APP_SIGNAL_STATUS(bufid);
+
+	if ((sig == ZB_BDB_SIGNAL_DEVICE_REBOOT || sig == ZB_BDB_SIGNAL_STEERING) &&
+	    status == RET_OK) {
+		LOG_INF("Zigbee joined; starting battery measurement");
+		battery_start();
+	}
+
 	ZB_ERROR_CHECK(zigbee_default_signal_handler(bufid));
 
 	if (bufid) {
@@ -110,7 +120,6 @@ int main(void)
 
 	/* Start the Zigbee thread; commissioning and rejoin are handled by ZBOSS. */
 	zigbee_enable();
-	battery_start();
 
 	if (IS_ENABLED(CONFIG_RAM_POWER_DOWN_LIBRARY)) {
 		power_down_unused_ram();
