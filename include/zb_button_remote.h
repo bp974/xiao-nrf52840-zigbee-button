@@ -8,7 +8,7 @@
 
 #define BUTTON_REMOTE_IN_CLUSTER_NUM 3
 #define BUTTON_REMOTE_OUT_CLUSTER_NUM 2
-#define BUTTON_REMOTE_POWER_CONFIG_ATTR_COUNT 7
+#define BUTTON_REMOTE_POWER_CONFIG_ATTR_COUNT 8
 
 #define ZB_DECLARE_BUTTON_REMOTE_CLUSTER_LIST( \
 		cluster_list_name, basic_attr_list, identify_attr_list, power_config_attr_list) \
