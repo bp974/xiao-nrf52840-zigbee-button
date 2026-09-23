@@ -1,0 +1,29 @@
+soft_device:
+  address: 0x00000
+  size: 0x27000
+  region: flash_primary
+
+app:
+  address: 0x27000
+  size: 0xc4000
+  region: flash_primary
+
+zboss_nvram:
+  address: 0xeb000
+  size: 0x8000
+  region: flash_primary
+
+zboss_product_config:
+  address: 0xf3000
+  size: 0x1000
+  region: flash_primary
+
+bootloader_do_not_write:
+  address: 0xf4000
+  size: 0xc000
+  region: flash_primary
+
+sram_primary:
+  address: 0x20000000
+  size: 0x40000
+  region: sram_primary
