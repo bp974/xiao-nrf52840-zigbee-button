@@ -58,11 +58,12 @@ static void app_clusters_attr_init(void)
 	dev_ctx.basic_attr.hw_version = 1;
 	dev_ctx.basic_attr.date_code[0] = 0;
 	dev_ctx.basic_attr.location_id[0] = 0;
-	dev_ctx.basic_attr.sw_ver = 1;
 	ZB_ZCL_SET_STRING_VAL(dev_ctx.basic_attr.mf_name,
 		"Broskie Applications", ZB_ZCL_STRING_CONST_SIZE("Broskie Applications"));
 	ZB_ZCL_SET_STRING_VAL(dev_ctx.basic_attr.model_id,
 		"XIAO-Zigbee-Button", ZB_ZCL_STRING_CONST_SIZE("XIAO-Zigbee-Button"));
+	ZB_ZCL_SET_STRING_VAL(dev_ctx.basic_attr.sw_ver,
+		"1", ZB_ZCL_STRING_CONST_SIZE("1"));
 	dev_ctx.basic_attr.power_source = ZB_ZCL_BASIC_POWER_SOURCE_UNKNOWN;
 	dev_ctx.identify_attr.identify_time =
 		ZB_ZCL_IDENTIFY_IDENTIFY_TIME_DEFAULT_VALUE;
