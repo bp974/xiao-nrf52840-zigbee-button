@@ -8,10 +8,12 @@
 
 LOG_MODULE_REGISTER(zigbee_actions, LOG_LEVEL_INF);
 
+static zb_uint16_t coordinator_address = BUTTON_REMOTE_COORDINATOR;
+
 static void send_toggle(zb_bufid_t bufid)
 {
 	ZB_ZCL_ON_OFF_SEND_REQ(bufid,
-		BUTTON_REMOTE_COORDINATOR,
+		coordinator_address,
 		ZB_APS_ADDR_MODE_16_ENDP_PRESENT,
 		BUTTON_REMOTE_COORDINATOR_ENDPOINT,
 		BUTTON_REMOTE_ENDPOINT,
@@ -24,7 +26,7 @@ static void send_toggle(zb_bufid_t bufid)
 static void send_on(zb_bufid_t bufid)
 {
 	ZB_ZCL_ON_OFF_SEND_REQ(bufid,
-		BUTTON_REMOTE_COORDINATOR,
+		coordinator_address,
 		ZB_APS_ADDR_MODE_16_ENDP_PRESENT,
 		BUTTON_REMOTE_COORDINATOR_ENDPOINT,
 		BUTTON_REMOTE_ENDPOINT,
@@ -37,7 +39,7 @@ static void send_on(zb_bufid_t bufid)
 static void send_hold(zb_bufid_t bufid)
 {
 	ZB_ZCL_LEVEL_CONTROL_SEND_MOVE_REQ(bufid,
-		BUTTON_REMOTE_COORDINATOR,
+		coordinator_address,
 		ZB_APS_ADDR_MODE_16_ENDP_PRESENT,
 		BUTTON_REMOTE_COORDINATOR_ENDPOINT,
 		BUTTON_REMOTE_ENDPOINT,
@@ -51,7 +53,7 @@ static void send_hold(zb_bufid_t bufid)
 static void send_release(zb_bufid_t bufid)
 {
 	ZB_ZCL_LEVEL_CONTROL_SEND_STOP_REQ(bufid,
-		BUTTON_REMOTE_COORDINATOR,
+		coordinator_address,
 		ZB_APS_ADDR_MODE_16_ENDP_PRESENT,
 		BUTTON_REMOTE_COORDINATOR_ENDPOINT,
 		BUTTON_REMOTE_ENDPOINT,
