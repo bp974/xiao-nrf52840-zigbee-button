@@ -9,6 +9,9 @@ const buttonActions = {
         e.numeric('battery_voltage', exposes.access.STATE)
             .withUnit('mV')
             .withDescription('Battery voltage'),
+        e.numeric('voltage', exposes.access.STATE)
+            .withUnit('mV')
+            .withDescription('Standard Zigbee battery voltage'),
     ],
 
     fromZigbee: [
@@ -53,9 +56,15 @@ const buttonActions = {
             cluster: 'genPowerCfg',
             type: ['attributeReport', 'readResponse'],
             convert: (model, msg) => {
-                if (msg.data.batteryVoltage !== undefined) {
+                const batteryVoltage = msg.data.batteryVoltage ??
+                    msg.data.battery_voltage;
+
+                if (batteryVoltage !== undefined && batteryVoltage < 255) {
+                    const millivolts = batteryVoltage * 100;
+
                     return {
-                        battery_voltage: msg.data.batteryVoltage * 100,
+                        battery_voltage: millivolts,
+                        voltage: millivolts,
                     };
                 }
             },
