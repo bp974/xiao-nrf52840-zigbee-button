@@ -25,10 +25,8 @@ zb_zcl_cluster_desc_t cluster_list_name[] = { \
 }
 
 #define ZB_DECLARE_BUTTON_REMOTE_EP(ep_name, cluster_list) \
-	ZB_DECLARE_SIMPLE_DESC(BUTTON_REMOTE_IN_CLUSTER_NUM, \
-		BUTTON_REMOTE_OUT_CLUSTER_NUM); \
-	ZB_AF_SIMPLE_DESC_TYPE(BUTTON_REMOTE_IN_CLUSTER_NUM, \
-		BUTTON_REMOTE_OUT_CLUSTER_NUM) simple_desc_##ep_name = { \
+	ZB_DECLARE_SIMPLE_DESC(2, 0); \
+	ZB_AF_SIMPLE_DESC_TYPE(2, 0) simple_desc_##ep_name = { \
 		BUTTON_REMOTE_ENDPOINT, \
 		ZB_AF_HA_PROFILE_ID, \
 		0x0009, /* On/Off switch device ID; action command is not sent yet. */ \
