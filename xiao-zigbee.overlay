@@ -1,0 +1,9 @@
+/ {
+    chosen {
+        ncs,zigbee-timer = &timer2;
+    };
+};
+
+&timer2 {
+    status = "okay";
+};

@@ -22,11 +22,9 @@ west build --no-sysbuild \
     "$ROOT/app" \
     -b xiao_ble \
     -d "$ROOT/build" \
-    #-p always \
     -p auto \
     -- \
-    -DDTC_OVERLAY_FILE="$ROOT/boards/xiao_ble.overlay" #\
-    #-DOVERLAY_CONFIG="$ROOT/config/xiao_ble.conf"
+    -DDTC_OVERLAY_FILE="$ROOT/boards/xiao_ble.overlay"
 
 echo
 echo "Build complete."
