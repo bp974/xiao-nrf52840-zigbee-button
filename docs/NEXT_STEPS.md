@@ -4,7 +4,7 @@ Do these in order. Avoid changing several variables at once.
 
 ## Phase 1 — hardware sanity
 
-- Build stock Nordic `light_switch` for `xiao_ble`.
+- Build the preserved Zigbee baseline for `xiao_ble`.
 - Flash UF2.
 - Confirm boot/logging.
 - Confirm Button 1 interrupt works.

@@ -1,0 +1,3 @@
+mainmenu "XIAO Zigbee Button"
+
+source "Kconfig.zephyr"

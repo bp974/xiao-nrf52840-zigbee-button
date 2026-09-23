@@ -1,3 +1,4 @@
+# XIAO nRF52840 flash layout. Keep the SoftDevice and UF2 bootloader untouched.
 soft_device:
   address: 0x00000
   size: 0x27000

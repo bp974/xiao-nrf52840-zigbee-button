@@ -1,6 +1,10 @@
 #include <zephyr/dt-bindings/gpio/gpio.h>
 
 / {
+    chosen {
+        ncs,zigbee-timer = &timer2;
+    };
+
     /*
      * Nordic's Zigbee light_switch sample uses the DK button abstraction.
      * Provide four GPIO keys so we can run the stock sample with minimal
@@ -43,4 +47,8 @@
         sw2 = &button2;
         sw3 = &button3;
     };
+};
+
+&timer2 {
+    status = "okay";
 };
