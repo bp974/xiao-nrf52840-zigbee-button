@@ -169,7 +169,7 @@ static void battery_work_fn(struct k_work *work)
 		battery_voltage_attr = (zb_uint8_t)((millivolts + 50U) / 100U);
 		battery_percentage_attr = voltage_to_percentage(millivolts);
 		LOG_INF("Battery: %u mV (ADC: %d mV, %u%%)", millivolts,
-			millivolts, adc_millivolts,
+			adc_millivolts,
 			battery_percentage_attr / 2U);
 		ZB_SCHEDULE_APP_CALLBACK(battery_apply_zigbee, 0);
 	}
