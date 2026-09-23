@@ -9,6 +9,7 @@
 #include <zb_nrf_platform.h>
 
 #include "buttons.h"
+#include "battery.h"
 #include "zb_button_remote.h"
 #include "zb_mem_config_custom.h"
 #include "zigbee_actions.h"
@@ -45,7 +46,8 @@ ZB_ZCL_DECLARE_IDENTIFY_SERVER_ATTRIB_LIST(
 ZB_DECLARE_BUTTON_REMOTE_CLUSTER_LIST(
 	button_remote_clusters,
 	basic_server_attr_list,
-	identify_server_attr_list);
+	identify_server_attr_list,
+	battery_power_config_attr_list);
 
 ZB_DECLARE_BUTTON_REMOTE_EP(button_remote_ep, button_remote_clusters);
 ZBOSS_DECLARE_DEVICE_CTX_1_EP(button_remote_ctx, button_remote_ep);
@@ -64,7 +66,7 @@ static void app_clusters_attr_init(void)
 		"XIAO-Zigbee-Button", ZB_ZCL_STRING_CONST_SIZE("XIAO-Zigbee-Button"));
 	ZB_ZCL_SET_STRING_VAL(dev_ctx.basic_attr.sw_ver,
 		"1", ZB_ZCL_STRING_CONST_SIZE("1"));
-	dev_ctx.basic_attr.power_source = ZB_ZCL_BASIC_POWER_SOURCE_UNKNOWN;
+	dev_ctx.basic_attr.power_source = ZB_ZCL_BASIC_POWER_SOURCE_BATTERY;
 	dev_ctx.identify_attr.identify_time =
 		ZB_ZCL_IDENTIFY_IDENTIFY_TIME_DEFAULT_VALUE;
 }
@@ -90,6 +92,12 @@ int main(void)
 		return err;
 	}
 
+	err = battery_init();
+	if (err) {
+		LOG_ERR("Battery initialization failed: %d", err);
+		return err;
+	}
+
 	zigbee_erase_persistent_storage(ERASE_PERSISTENT_CONFIG);
 	zb_set_ed_timeout(ED_AGING_TIMEOUT_64MIN);
 	zb_set_keepalive_timeout(ZB_MILLISECONDS_TO_BEACON_INTERVAL(3000));
@@ -99,6 +107,7 @@ int main(void)
 
 	/* Start the Zigbee thread; commissioning and rejoin are handled by ZBOSS. */
 	zigbee_enable();
+	battery_start();
 
 	if (IS_ENABLED(CONFIG_RAM_POWER_DOWN_LIBRARY)) {
 		power_down_unused_ram();

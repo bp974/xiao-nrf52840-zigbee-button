@@ -6,6 +6,7 @@ project(xiao_zigbee_button)
 target_sources(app PRIVATE
     src/main.c
     src/buttons.c
+    src/battery.c
     src/zigbee_actions.c
 )
 target_include_directories(app PRIVATE include)

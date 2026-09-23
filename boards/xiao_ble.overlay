@@ -19,6 +19,29 @@
     aliases {
         sw0 = &button0;
     };
+
+    zephyr,user {
+        io-channels = <&adc 7>;
+    };
+
+    battery_enable: battery-enable {
+        gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+    };
+};
+
+&adc {
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    channel@7 {
+        reg = <7>;
+        zephyr,gain = "ADC_GAIN_1_6";
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+        zephyr,input-positive = <NRF_SAADC_AIN7>;
+        zephyr,resolution = <12>;
+        zephyr,oversampling = <4>;
+    };
 };
 
 &timer2 {
