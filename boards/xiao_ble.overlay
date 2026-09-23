@@ -41,15 +41,6 @@
     };
 };
 
-&gpio0 {
-    battery-enable-hog {
-        gpio-hog;
-        gpios = <14 GPIO_ACTIVE_LOW>;
-        output-low;
-        line-name = "Battery divider enable";
-    };
-};
-
 &timer2 {
     status = "okay";
 };

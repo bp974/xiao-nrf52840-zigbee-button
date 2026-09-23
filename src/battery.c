@@ -2,7 +2,9 @@
 #include <stdint.h>
 
 #include <zephyr/devicetree.h>
+#include <zephyr/device.h>
 #include <zephyr/drivers/adc.h>
+#include <zephyr/drivers/gpio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
 
@@ -16,11 +18,13 @@
 #define BATTERY_DIVIDER_TOP_OHMS     1000U
 #define BATTERY_DIVIDER_BOTTOM_OHMS  510U
 #define BATTERY_SAMPLE_COUNT         8U
+#define BATTERY_ENABLE_PIN           14
 
 LOG_MODULE_REGISTER(battery, LOG_LEVEL_INF);
 
 static const struct adc_dt_spec battery_adc =
 	ADC_DT_SPEC_GET(DT_PATH(zephyr_user));
+static const struct device *gpio0 = DEVICE_DT_GET(DT_NODELABEL(gpio0));
 static struct k_work_delayable battery_work;
 
 static zb_uint8_t battery_voltage_attr =
@@ -86,7 +90,7 @@ static zb_uint8_t voltage_to_percentage(uint32_t millivolts)
 	return 0;
 }
 
-static int read_battery(uint32_t *millivolts)
+static int read_battery(uint32_t *millivolts, int32_t *adc_millivolts)
 {
 	int16_t samples[BATTERY_SAMPLE_COUNT];
 	struct adc_sequence sequence;
@@ -118,6 +122,7 @@ static int read_battery(uint32_t *millivolts)
 	if (err) {
 		return err;
 	}
+	*adc_millivolts = sample_mv;
 
 	*millivolts = (uint32_t)sample_mv * BATTERY_DIVIDER_TOP_OHMS /
 		BATTERY_DIVIDER_BOTTOM_OHMS + (uint32_t)sample_mv;
@@ -152,17 +157,19 @@ static void battery_apply_zigbee(zb_bufid_t bufid)
 static void battery_work_fn(struct k_work *work)
 {
 	uint32_t millivolts;
+	int32_t adc_millivolts;
 	int err;
 
 	ARG_UNUSED(work);
 
-	err = read_battery(&millivolts);
+	err = read_battery(&millivolts, &adc_millivolts);
 	if (err) {
 		LOG_ERR("Battery ADC read failed: %d", err);
 	} else {
 		battery_voltage_attr = (zb_uint8_t)((millivolts + 50U) / 100U);
 		battery_percentage_attr = voltage_to_percentage(millivolts);
-		LOG_INF("Battery: %u mV (%u%%)", millivolts,
+		LOG_INF("Battery: %u mV (ADC: %d mV, %u%%)", millivolts,
+			millivolts, adc_millivolts,
 			battery_percentage_attr / 2U);
 		ZB_SCHEDULE_APP_CALLBACK(battery_apply_zigbee, 0);
 	}
@@ -177,7 +184,16 @@ int battery_init(void)
 	if (!adc_is_ready_dt(&battery_adc)) {
 		return -ENODEV;
 	}
+	if (!device_is_ready(gpio0)) {
+		return -ENODEV;
+	}
 	err = adc_channel_setup_dt(&battery_adc);
+	if (err) {
+		return err;
+	}
+
+	/* P0.14 low enables the XIAO's battery-voltage divider. */
+	err = gpio_pin_configure(gpio0, BATTERY_ENABLE_PIN, GPIO_OUTPUT_LOW);
 	if (err) {
 		return err;
 	}
