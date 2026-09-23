@@ -1,0 +1,46 @@
+#include <zephyr/dt-bindings/gpio/gpio.h>
+
+/ {
+    /*
+     * Nordic's Zigbee light_switch sample uses the DK button abstraction.
+     * Provide four GPIO keys so we can run the stock sample with minimal
+     * application changes.
+     *
+     * XIAO nRF52840 mapping:
+     * D1 -> P0.03
+     * D2 -> P0.28
+     * D3 -> P0.29
+     * D4 -> P0.04
+     */
+
+    buttons {
+        compatible = "gpio-keys";
+
+        button0: button_0 {
+            gpios = <&gpio0 3 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+            label = "Button 1";
+        };
+
+        button1: button_1 {
+            gpios = <&gpio0 28 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+            label = "Button 2";
+        };
+
+        button2: button_2 {
+            gpios = <&gpio0 29 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+            label = "Button 3 / Sleepy Enable";
+        };
+
+        button3: button_3 {
+            gpios = <&gpio0 4 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+            label = "Button 4 / Factory Reset";
+        };
+    };
+
+    aliases {
+        sw0 = &button0;
+        sw1 = &button1;
+        sw2 = &button2;
+        sw3 = &button3;
+    };
+};
