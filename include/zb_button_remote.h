@@ -8,6 +8,7 @@
 
 #define BUTTON_REMOTE_IN_CLUSTER_NUM 3
 #define BUTTON_REMOTE_OUT_CLUSTER_NUM 2
+#define BUTTON_REMOTE_POWER_CONFIG_ATTR_COUNT 7
 
 #define ZB_DECLARE_BUTTON_REMOTE_CLUSTER_LIST( \
 		cluster_list_name, basic_attr_list, identify_attr_list, power_config_attr_list) \
@@ -26,7 +27,7 @@ zb_zcl_cluster_desc_t cluster_list_name[] = { \
 		ZB_ZCL_MANUF_CODE_INVALID), \
 	ZB_ZCL_CLUSTER_DESC( \
 		ZB_ZCL_CLUSTER_ID_POWER_CONFIG, \
-		ZB_ZCL_ARRAY_SIZE(power_config_attr_list, zb_zcl_attr_t), \
+		BUTTON_REMOTE_POWER_CONFIG_ATTR_COUNT, \
 		(power_config_attr_list), \
 		ZB_ZCL_CLUSTER_SERVER_ROLE, \
 		ZB_ZCL_MANUF_CODE_INVALID), \
