@@ -49,6 +49,9 @@ ZB_DECLARE_BUTTON_REMOTE_CLUSTER_LIST(
 	identify_server_attr_list,
 	battery_power_config_attr_list);
 
+static zb_zcl_reporting_info_t button_remote_reporting_info[
+	BUTTON_REMOTE_REPORTING_SLOT_COUNT];
+
 ZB_DECLARE_BUTTON_REMOTE_EP(button_remote_ep, button_remote_clusters);
 ZBOSS_DECLARE_DEVICE_CTX_1_EP(button_remote_ctx, button_remote_ep);
 

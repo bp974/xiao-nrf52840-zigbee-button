@@ -9,6 +9,7 @@
 #define BUTTON_REMOTE_IN_CLUSTER_NUM 3
 #define BUTTON_REMOTE_OUT_CLUSTER_NUM 2
 #define BUTTON_REMOTE_POWER_CONFIG_ATTR_COUNT 8
+#define BUTTON_REMOTE_REPORTING_SLOT_COUNT 4
 
 #define ZB_DECLARE_BUTTON_REMOTE_CLUSTER_LIST( \
 		cluster_list_name, basic_attr_list, identify_attr_list, power_config_attr_list) \
@@ -61,6 +62,7 @@ zb_zcl_cluster_desc_t cluster_list_name[] = { \
 		ZB_AF_HA_PROFILE_ID, 0, NULL, \
 		ZB_ZCL_ARRAY_SIZE(cluster_list, zb_zcl_cluster_desc_t), \
 		cluster_list, (zb_af_simple_desc_1_1_t *)&simple_desc_##ep_name, \
-		0, NULL, 0, NULL)
+		BUTTON_REMOTE_REPORTING_SLOT_COUNT, button_remote_reporting_info, \
+		0, NULL)
 
 #endif /* ZB_BUTTON_REMOTE_H */
