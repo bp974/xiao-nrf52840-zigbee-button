@@ -3,6 +3,7 @@
 #include <ram_pwrdn.h>
 
 #include <zboss_api.h>
+#include <zboss_api_addons.h>
 #include <zigbee/zigbee_app_utils.h>
 #include <zigbee/zigbee_error_handler.h>
 #include <zb_nrf_platform.h>
