@@ -33,7 +33,9 @@ on conversation history.
 
 ## Sleepy end-device work
 
-- [ ] Enable sleepy end-device behavior after battery reporting is validated.
+- [x] Enable sleepy end-device behavior before Zigbee startup.
+- [x] Notify the Zigbee app-utils layer on button activity for wake/rejoin
+      handling.
 - [ ] Move the first battery sample/report to a wake-aware flow.
 - [ ] Disable or minimize the battery-divider current during sleep if safe for
       the XIAO hardware.
@@ -55,7 +57,15 @@ on conversation history.
 
 - [ ] Calibrate ADC divider measurements against a multimeter.
 - [ ] Confirm battery percentage curve for the selected cell chemistry.
-- [ ] Add standard battery reporting intervals appropriate for a sleepy device.
+- [ ] Replace the current 15-minute diagnostic interval with a sleepy-device
+      reporting policy:
+  - report after startup, join, or rejoin;
+  - measure on button interaction when the last measurement is older than
+    approximately one hour;
+  - report periodically every 6–12 hours;
+  - report sooner when the battery percentage drops meaningfully.
+- [ ] Configure standard Zigbee battery reporting with an appropriate minimum
+      interval, maximum interval, and percentage-change threshold.
 - [ ] Add exact millivolt telemetry through a clean manufacturer-specific
       attribute or cluster, not the Level Control command.
 

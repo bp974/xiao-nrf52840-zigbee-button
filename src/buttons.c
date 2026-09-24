@@ -2,6 +2,8 @@
 #include <zephyr/logging/log.h>
 #include <dk_buttons_and_leds.h>
 
+#include <zigbee/zigbee_app_utils.h>
+
 #include "buttons.h"
 
 /* Tune these values after testing the physical switch and enclosure. */
@@ -57,6 +59,9 @@ static void button_changed(uint32_t button_state, uint32_t has_changed)
 	if ((has_changed & BUTTON_MASK) == 0U) {
 		return;
 	}
+
+	/* Wake/notify the Zigbee stack immediately on physical button activity. */
+	user_input_indicate();
 
 	now = k_uptime_get();
 	if ((now - last_transition_ms) < BUTTON_DEBOUNCE_MS) {

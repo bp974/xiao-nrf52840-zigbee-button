@@ -118,6 +118,9 @@ int main(void)
 	ZB_AF_REGISTER_DEVICE_CTX(&button_remote_ctx);
 	app_clusters_attr_init();
 
+	/* Operate as a sleepy end device; ZBOSS will sleep when the stack is idle. */
+	zigbee_configure_sleepy_behavior(true);
+
 	/* Start the Zigbee thread; commissioning and rejoin are handled by ZBOSS. */
 	zigbee_enable();
 
