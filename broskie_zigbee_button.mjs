@@ -7,16 +7,13 @@ const e = exposes.presets;
 const buttonActions = {
     exposes: [
         e.action(['single', 'double', 'hold', 'release']),
-        e.numeric('battery_voltage', exposes.access.STATE)
-            .withUnit('mV')
-            .withDescription('Battery voltage'),
         e.numeric('voltage', exposes.access.STATE)
             .withUnit('mV')
-            .withDescription('Standard Zigbee battery voltage'),
+            .withDescription('Voltage of the battery in millivolts'),
     ],
 
     fromZigbee: [
-        // Gesture commands used by both the ESP and nRF52840 firmware.
+        // Gesture commands sent by the nRF52840 firmware.
         {
             cluster: 'genOnOff',
             type: ['commandToggle', 'commandOn'],
@@ -45,31 +42,14 @@ const buttonActions = {
             },
         },
         {
-            // Standard Zigbee Power Configuration battery voltage, reported
-            // by the nRF52840 firmware in units of 100 mV.
-            cluster: 'genPowerCfg',
-            type: ['attributeReport', 'readResponse'],
-            convert: (model, msg) => {
-                const batteryVoltage = msg.data.batteryVoltage ??
-                    msg.data.battery_voltage;
-
-                if (batteryVoltage !== undefined && batteryVoltage < 255) {
-                    const millivolts = batteryVoltage * 100;
-
-                    return {
-                        voltage: millivolts,
-                    };
-                }
-            },
-        },
-        {
+            // Exact nRF battery voltage in millivolts from Basic 0xFF01.
             cluster: 'genBasic',
             type: ['attributeReport', 'readResponse'],
             convert: (model, msg) => {
                 const exactVoltage = msg.data['65281'] ?? msg.data[65281];
 
                 if (typeof exactVoltage === 'number' && exactVoltage > 0) {
-                    return {battery_voltage: exactVoltage};
+                    return {voltage: exactVoltage};
                 }
             },
         },
