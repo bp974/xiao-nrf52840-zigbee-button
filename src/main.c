@@ -24,20 +24,42 @@ struct zb_device_ctx {
 };
 
 static struct zb_device_ctx dev_ctx;
+static zb_bool_t device_enable_basic_server_attr_list = ZB_TRUE;
 
-ZB_ZCL_DECLARE_BASIC_ATTRIB_LIST_EXT(
-	basic_server_attr_list,
-	&dev_ctx.basic_attr.zcl_version,
-	&dev_ctx.basic_attr.app_version,
-	&dev_ctx.basic_attr.stack_version,
-	&dev_ctx.basic_attr.hw_version,
-	dev_ctx.basic_attr.mf_name,
-	dev_ctx.basic_attr.model_id,
-	dev_ctx.basic_attr.date_code,
-	&dev_ctx.basic_attr.power_source,
-	dev_ctx.basic_attr.location_id,
-	&dev_ctx.basic_attr.ph_env,
-	dev_ctx.basic_attr.sw_ver);
+ZB_ZCL_START_DECLARE_ATTRIB_LIST_CLUSTER_REVISION(
+	basic_server_attr_list, ZB_ZCL_BASIC)
+ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BASIC_ZCL_VERSION_ID,
+	&dev_ctx.basic_attr.zcl_version)
+ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BASIC_APPLICATION_VERSION_ID,
+	&dev_ctx.basic_attr.app_version)
+ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BASIC_STACK_VERSION_ID,
+	&dev_ctx.basic_attr.stack_version)
+ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BASIC_HW_VERSION_ID,
+	&dev_ctx.basic_attr.hw_version)
+ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BASIC_MANUFACTURER_NAME_ID,
+	dev_ctx.basic_attr.mf_name)
+ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BASIC_MODEL_IDENTIFIER_ID,
+	dev_ctx.basic_attr.model_id)
+ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BASIC_DATE_CODE_ID,
+	dev_ctx.basic_attr.date_code)
+ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BASIC_POWER_SOURCE_ID,
+	&dev_ctx.basic_attr.power_source)
+ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BASIC_SW_BUILD_ID,
+	dev_ctx.basic_attr.sw_ver)
+ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BASIC_DEVICE_ENABLED_ID,
+	&device_enable_basic_server_attr_list)
+ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BASIC_LOCATION_DESCRIPTION_ID,
+	dev_ctx.basic_attr.location_id)
+ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BASIC_PHYSICAL_ENVIRONMENT_ID,
+	&dev_ctx.basic_attr.ph_env)
+{
+	BUTTON_REMOTE_EXACT_VOLTAGE_ATTR_ID,
+	ZB_ZCL_ATTR_TYPE_U16,
+	ZB_ZCL_ATTR_ACCESS_READ_ONLY | ZB_ZCL_ATTR_ACCESS_REPORTING,
+	ZB_ZCL_NON_MANUFACTURER_SPECIFIC,
+	(void *)&battery_voltage_exact_attr
+},
+ZB_ZCL_FINISH_DECLARE_ATTRIB_LIST;
 
 ZB_ZCL_DECLARE_IDENTIFY_SERVER_ATTRIB_LIST(
 	identify_server_attr_list,

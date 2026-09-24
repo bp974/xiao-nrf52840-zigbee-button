@@ -1,5 +1,6 @@
 import * as m from 'zigbee-herdsman-converters/lib/modernExtend';
 import * as exposes from 'zigbee-herdsman-converters/lib/exposes';
+import * as reporting from 'zigbee-herdsman-converters/lib/reporting';
 
 const e = exposes.presets;
 
@@ -31,7 +32,7 @@ const buttonActions = {
         },
         {
             cluster: 'genLevelCtrl',
-            type: ['commandMove', 'commandStop', 'commandMoveToLevel'],
+            type: ['commandMove', 'commandStop'],
             convert: (model, msg) => {
                 if (msg.type === 'commandMove') {
                     return {action: 'hold'};
@@ -41,13 +42,6 @@ const buttonActions = {
                     return {action: 'release'};
                 }
 
-                // Compatibility with the ESP firmware's custom voltage
-                // telemetry command.
-                if (msg.type === 'commandMoveToLevel') {
-                    return {
-                        battery_voltage: msg.data.transtime,
-                    };
-                }
             },
         },
         {
@@ -63,13 +57,39 @@ const buttonActions = {
                     const millivolts = batteryVoltage * 100;
 
                     return {
-                        battery_voltage: millivolts,
                         voltage: millivolts,
                     };
                 }
             },
         },
+        {
+            cluster: 'genBasic',
+            type: ['attributeReport', 'readResponse'],
+            convert: (model, msg) => {
+                const exactVoltage = msg.data['65281'] ?? msg.data[65281];
+
+                if (typeof exactVoltage === 'number' && exactVoltage > 0) {
+                    return {battery_voltage: exactVoltage};
+                }
+            },
+        },
     ],
+
+    configure: async (device, coordinatorEndpoint) => {
+        const endpoint = device.getEndpoint(10);
+        const reportingConfiguration = [{
+            // Unknown attributes must include their ZCL data type so
+            // zigbee-herdsman can build the configure-reporting request.
+            attribute: {ID: 0xFF01, type: 0x21}, // uint16
+            minimumReportInterval: 0,
+            maximumReportInterval: 21600,
+            reportableChange: 10,
+        }];
+
+        await reporting.bind(endpoint, coordinatorEndpoint, ['genBasic']);
+        await endpoint.configureReporting('genBasic', reportingConfiguration);
+        await endpoint.read('genBasic', [0xFF01]);
+    },
 
     isModernExtend: true,
 };

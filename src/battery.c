@@ -29,6 +29,7 @@ static struct k_work_delayable battery_work;
 
 static zb_uint8_t battery_voltage_attr =
 	ZB_ZCL_POWER_CONFIG_BATTERY_VOLTAGE_INVALID;
+zb_uint16_t battery_voltage_exact_attr;
 static zb_uint8_t battery_size_attr = 0xff;
 static zb_uint8_t battery_quantity_attr = 1;
 static zb_uint8_t battery_rated_voltage_attr = 42;
@@ -132,6 +133,7 @@ static int read_battery(uint32_t *millivolts, int32_t *adc_millivolts)
 static void battery_apply_zigbee(zb_bufid_t bufid)
 {
 	zb_zcl_status_t voltage_status;
+	zb_zcl_status_t exact_voltage_status;
 	zb_zcl_status_t percentage_status;
 
 	ZVUNUSED(bufid);
@@ -141,19 +143,29 @@ static void battery_apply_zigbee(zb_bufid_t bufid)
 		ZB_ZCL_CLUSTER_SERVER_ROLE,
 		ZB_ZCL_ATTR_POWER_CONFIG_BATTERY_VOLTAGE_ID,
 		&battery_voltage_attr, ZB_FALSE);
+	exact_voltage_status = zb_zcl_set_attr_val(
+		BUTTON_REMOTE_ENDPOINT, ZB_ZCL_CLUSTER_ID_BASIC,
+		ZB_ZCL_CLUSTER_SERVER_ROLE,
+		BUTTON_REMOTE_EXACT_VOLTAGE_ATTR_ID,
+		&battery_voltage_exact_attr, ZB_FALSE);
 	percentage_status = zb_zcl_set_attr_val(
 		BUTTON_REMOTE_ENDPOINT, ZB_ZCL_CLUSTER_ID_POWER_CONFIG,
 		ZB_ZCL_CLUSTER_SERVER_ROLE,
 		ZB_ZCL_ATTR_POWER_CONFIG_BATTERY_PERCENTAGE_REMAINING_ID,
 		&battery_percentage_attr, ZB_FALSE);
 
-	LOG_INF("Battery ZCL update: voltage=%u (%u mV), status=%d; percentage=%u (%u%%), status=%d",
+	LOG_INF("Battery ZCL update: voltage=%u (%u mV), status=%d; exact=%u mV, status=%d; percentage=%u (%u%%), status=%d",
 		battery_voltage_attr, battery_voltage_attr * 100U, voltage_status,
+		battery_voltage_exact_attr, exact_voltage_status,
 		battery_percentage_attr, battery_percentage_attr / 2U,
 		percentage_status);
 
 	if (voltage_status != RET_OK) {
 		LOG_ERR("Failed to update battery voltage attribute: %d", voltage_status);
+	}
+	if (exact_voltage_status != RET_OK) {
+		LOG_ERR("Failed to update exact battery voltage attribute: %d",
+			exact_voltage_status);
 	}
 	if (percentage_status != RET_OK) {
 		LOG_ERR("Failed to update battery percentage attribute: %d", percentage_status);
@@ -173,6 +185,7 @@ static void battery_work_fn(struct k_work *work)
 		LOG_ERR("Battery ADC read failed: %d", err);
 	} else {
 		battery_voltage_attr = (zb_uint8_t)((millivolts + 50U) / 100U);
+		battery_voltage_exact_attr = (zb_uint16_t)millivolts;
 		battery_percentage_attr = voltage_to_percentage(millivolts);
 		LOG_INF("Battery: %u mV (ADC: %d mV, %u%%)", millivolts,
 			adc_millivolts,

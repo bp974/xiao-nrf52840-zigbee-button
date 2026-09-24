@@ -27,9 +27,10 @@ on conversation history.
 ## Current follow-up
 
 - [ ] Confirm standard `genPowerCfg` reports are visible in Z2M after reconfigure.
-- [ ] Add exact battery voltage reporting in millivolts while retaining the
-      standard 100 mV Zigbee voltage field.
-- [ ] Keep the final nRF converter independent from the ESP-specific converter.
+- [x] Add exact millivolt battery reporting through `genBasic` attribute
+      `0xFF01` while retaining the standard 100 mV Zigbee voltage field.
+- [x] Keep the final nRF converter independent from the ESP-specific voltage
+      converter.
 
 ## Sleepy end-device work
 
@@ -66,8 +67,8 @@ on conversation history.
   - report sooner when the battery percentage drops meaningfully.
 - [ ] Configure standard Zigbee battery reporting with an appropriate minimum
       interval, maximum interval, and percentage-change threshold.
-- [ ] Add exact millivolt telemetry through a clean manufacturer-specific
-      attribute or cluster, not the Level Control command.
+- [x] Add exact millivolt telemetry through a `genBasic` `0xFF01` attribute,
+      not the Level Control command.
 
 ## Explicitly out of scope for the current milestone
 
