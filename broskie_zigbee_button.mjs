@@ -75,21 +75,23 @@ const buttonActions = {
         },
     ],
 
-    configure: async (device, coordinatorEndpoint) => {
-        const endpoint = device.getEndpoint(10);
-        const reportingConfiguration = [{
-            // Unknown attributes must include their ZCL data type so
-            // zigbee-herdsman can build the configure-reporting request.
-            attribute: {ID: 0xFF01, type: 0x21}, // uint16
-            minimumReportInterval: 0,
-            maximumReportInterval: 21600,
-            reportableChange: 10,
-        }];
+    configure: [
+        async (device, coordinatorEndpoint) => {
+            const endpoint = device.getEndpoint(10);
+            const reportingConfiguration = [{
+                // Unknown attributes must include their ZCL data type so
+                // zigbee-herdsman can build the configure-reporting request.
+                attribute: {ID: 0xFF01, type: 0x21}, // uint16
+                minimumReportInterval: 0,
+                maximumReportInterval: 21600,
+                reportableChange: 10,
+            }];
 
-        await reporting.bind(endpoint, coordinatorEndpoint, ['genBasic']);
-        await endpoint.configureReporting('genBasic', reportingConfiguration);
-        await endpoint.read('genBasic', [0xFF01]);
-    },
+            await reporting.bind(endpoint, coordinatorEndpoint, ['genBasic']);
+            await endpoint.configureReporting('genBasic', reportingConfiguration);
+            await endpoint.read('genBasic', [0xFF01]);
+        },
+    ],
 
     isModernExtend: true,
 };
