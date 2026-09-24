@@ -9,7 +9,8 @@ const buttonActions = {
         e.action(['single', 'double', 'hold', 'release']),
         e.numeric('voltage', exposes.access.STATE)
             .withUnit('mV')
-            .withDescription('Voltage of the battery in millivolts'),
+            .withDescription('Voltage of the battery in millivolts')
+            .withCategory('diagnostic'),
     ],
 
     fromZigbee: [
