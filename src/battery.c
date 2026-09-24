@@ -14,7 +14,7 @@
 #include "battery.h"
 #include "zb_button_remote.h"
 
-#define BATTERY_SAMPLE_INTERVAL      K_MINUTES(15)
+#define BATTERY_SAMPLE_INTERVAL      K_HOURS(6)
 #define BATTERY_DIVIDER_TOP_OHMS     1000U
 #define BATTERY_DIVIDER_BOTTOM_OHMS  510U
 #define BATTERY_SAMPLE_COUNT         8U

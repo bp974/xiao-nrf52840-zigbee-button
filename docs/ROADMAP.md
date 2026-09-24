@@ -58,8 +58,8 @@ on conversation history.
 
 - [ ] Calibrate ADC divider measurements against a multimeter.
 - [ ] Confirm battery percentage curve for the selected cell chemistry.
-- [ ] Replace the current 15-minute diagnostic interval with a sleepy-device
-      reporting policy:
+- [x] Set periodic battery sampling/reporting to every 6 hours.
+- [ ] Complete the sleepy-device battery reporting policy:
   - report after startup, join, or rejoin;
   - measure on button interaction when the last measurement is older than
     approximately one hour;
