@@ -147,7 +147,7 @@ static void battery_apply_zigbee(zb_bufid_t bufid)
 		BUTTON_REMOTE_ENDPOINT, ZB_ZCL_CLUSTER_ID_BASIC,
 		ZB_ZCL_CLUSTER_SERVER_ROLE,
 		BUTTON_REMOTE_EXACT_VOLTAGE_ATTR_ID,
-		&battery_voltage_exact_attr, ZB_FALSE);
+		(zb_uint8_t *)&battery_voltage_exact_attr, ZB_FALSE);
 	percentage_status = zb_zcl_set_attr_val(
 		BUTTON_REMOTE_ENDPOINT, ZB_ZCL_CLUSTER_ID_POWER_CONFIG,
 		ZB_ZCL_CLUSTER_SERVER_ROLE,
