@@ -77,7 +77,12 @@ const buttonActions = {
 };
 
 export default {
-    zigbeeModel: ['XIAO-Zigbee-Button'],
+    fingerprint: [
+        {
+            modelID: 'XIAO-Zigbee-Button',
+            manufacturerName: 'Broskie Applications',
+        },
+    ],
     model: 'XIAO-Zigbee-Button',
     vendor: 'Broskie Applications',
     description: 'Zigbee single button',
