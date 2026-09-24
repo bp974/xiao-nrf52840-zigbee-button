@@ -102,6 +102,10 @@ void zboss_signal_handler(zb_bufid_t bufid)
 	zb_zdo_app_signal_type_t sig = zb_get_app_signal(bufid, &sig_hndler);
 	zb_ret_t status = ZB_GET_APP_SIGNAL_STATUS(bufid);
 
+	if (sig == ZB_COMMON_SIGNAL_CAN_SLEEP && status == RET_OK) {
+		LOG_INF("Zigbee stack idle; entering sleep");
+	}
+
 	if ((sig == ZB_BDB_SIGNAL_DEVICE_REBOOT || sig == ZB_BDB_SIGNAL_STEERING) &&
 	    status == RET_OK) {
 		LOG_INF("Zigbee joined; starting battery measurement");
