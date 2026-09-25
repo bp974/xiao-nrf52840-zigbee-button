@@ -44,6 +44,19 @@ on conversation history.
 - [x] Confirm network state persists across sleep and reset.
 - [x] Confirm a button wake does not force a rejoin.
 - [ ] Measure awake, joined-idle, sleepy-idle, and transmit current.
+- [ ] Review Zigbee keepalive and polling intervals against measured sleepy-idle
+      current and coordinator reliability.
+
+## Production and diagnostics
+
+- [ ] Add a documented factory-reset procedure, preferably using a deliberate
+      long-press gesture that cannot be triggered accidentally.
+- [ ] Add Zigbee Identify support to the converter and application behavior.
+- [ ] Provide a production logging profile with UART/console logging disabled.
+- [ ] Provide a simple debug-build option to re-enable UART logging without
+      changing application behavior.
+- [ ] Confirm that the production profile does not leave development logging,
+      LEDs, or other avoidable loads enabled.
 
 ## Remote behavior (low priority)
 

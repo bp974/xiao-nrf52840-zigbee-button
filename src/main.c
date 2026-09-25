@@ -15,6 +15,7 @@
 #include "zigbee_actions.h"
 
 #define ERASE_PERSISTENT_CONFIG ZB_FALSE
+#define ZIGBEE_LONG_POLL_INTERVAL_MS (15U * 60U * 1000U)
 
 LOG_MODULE_REGISTER(app, LOG_LEVEL_INF);
 
@@ -105,6 +106,8 @@ void zboss_signal_handler(zb_bufid_t bufid)
 	if ((sig == ZB_BDB_SIGNAL_DEVICE_REBOOT || sig == ZB_BDB_SIGNAL_STEERING) &&
 	    status == RET_OK) {
 		LOG_INF("Zigbee joined; starting battery measurement");
+		/* Reduce idle polling while retaining responsive button wake-up. */
+		zb_zdo_pim_set_long_poll_interval(ZIGBEE_LONG_POLL_INTERVAL_MS);
 		battery_start();
 	}
 
@@ -135,7 +138,8 @@ int main(void)
 
 	zigbee_erase_persistent_storage(ERASE_PERSISTENT_CONFIG);
 	zb_set_ed_timeout(ED_AGING_TIMEOUT_64MIN);
-	zb_set_keepalive_timeout(ZB_MILLISECONDS_TO_BEACON_INTERVAL(3000));
+	zb_set_keepalive_timeout(
+		ZB_MILLISECONDS_TO_BEACON_INTERVAL(ZIGBEE_LONG_POLL_INTERVAL_MS));
 
 	ZB_AF_REGISTER_DEVICE_CTX(&button_remote_ctx);
 	app_clusters_attr_init();
