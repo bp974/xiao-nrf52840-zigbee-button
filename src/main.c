@@ -13,11 +13,12 @@
 #include "zb_button_remote.h"
 #include "zb_mem_config_custom.h"
 #include "zigbee_actions.h"
+#include "app_logging.h"
 
 #define ERASE_PERSISTENT_CONFIG ZB_FALSE
 #define ZIGBEE_LONG_POLL_INTERVAL_MS (15U * 60U * 1000U)
 
-LOG_MODULE_REGISTER(app, LOG_LEVEL_INF);
+LOG_MODULE_REGISTER(app, XIAO_ZIGBEE_LOG_LEVEL);
 
 struct zb_device_ctx {
 	zb_zcl_basic_attrs_ext_t basic_attr;

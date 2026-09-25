@@ -5,6 +5,7 @@
 #include <zigbee/zigbee_app_utils.h>
 
 #include "buttons.h"
+#include "app_logging.h"
 
 /* Tune these values after testing the physical switch and enclosure. */
 #define BUTTON_MASK                 DK_BTN1_MSK
@@ -12,7 +13,7 @@
 #define DOUBLE_PRESS_WINDOW_MS      350
 #define HOLD_TIME_MS                600
 
-LOG_MODULE_REGISTER(buttons, LOG_LEVEL_INF);
+LOG_MODULE_REGISTER(buttons, XIAO_ZIGBEE_LOG_LEVEL);
 
 static button_action_handler_t action_handler;
 static struct k_work_delayable single_press_work;

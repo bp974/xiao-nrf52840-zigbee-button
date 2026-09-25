@@ -12,11 +12,18 @@ fi
 echo "Building XIAO nRF52840 Zigbee button..."
 echo
 
+BUILD_OPTIONS=()
+if [[ "${DEBUG_LOGGING:-0}" == "1" ]]; then
+    BUILD_OPTIONS+=("-DOVERLAY_CONFIG=prj_debug.conf")
+    echo "Debug UART logging enabled."
+fi
+
 west build --no-sysbuild \
     "$ROOT" \
     -b xiao_ble \
     -d "$ROOT/build" \
-    -p always
+    -p always \
+    "${BUILD_OPTIONS[@]}"
 
 echo
 echo "Build complete."

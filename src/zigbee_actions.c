@@ -5,8 +5,9 @@
 
 #include "zigbee_actions.h"
 #include "zb_button_remote.h"
+#include "app_logging.h"
 
-LOG_MODULE_REGISTER(zigbee_actions, LOG_LEVEL_INF);
+LOG_MODULE_REGISTER(zigbee_actions, XIAO_ZIGBEE_LOG_LEVEL);
 
 static zb_uint16_t coordinator_address = BUTTON_REMOTE_COORDINATOR;
 

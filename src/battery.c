@@ -13,6 +13,7 @@
 
 #include "battery.h"
 #include "zb_button_remote.h"
+#include "app_logging.h"
 
 #define BATTERY_SAMPLE_INTERVAL      K_HOURS(6)
 #define BATTERY_DIVIDER_TOP_OHMS     1000U
@@ -20,7 +21,7 @@
 #define BATTERY_SAMPLE_COUNT         8U
 #define BATTERY_ENABLE_PIN           14
 
-LOG_MODULE_REGISTER(battery, LOG_LEVEL_INF);
+LOG_MODULE_REGISTER(battery, XIAO_ZIGBEE_LOG_LEVEL);
 
 static const struct adc_dt_spec battery_adc =
 	ADC_DT_SPEC_GET(DT_PATH(zephyr_user));

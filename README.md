@@ -19,6 +19,13 @@ Use an NCS 2.6.0 shell, then run:
 ./scripts/build.sh
 ```
 
+Production builds disable the UART console and application logging. To build a
+development image with verbose serial logging enabled, run:
+
+```bash
+DEBUG_LOGGING=1 ./scripts/build.sh
+```
+
 The output is written to `build/`. The UF2 image is
 `build/zephyr/zephyr.uf2`.
 

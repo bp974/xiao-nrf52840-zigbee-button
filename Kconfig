@@ -1,3 +1,10 @@
 mainmenu "XIAO Zigbee Button"
 
+config XIAO_ZIGBEE_DEBUG_LOGGING
+	bool "Enable verbose application logging"
+	default n
+	help
+		Enable UART console logging and verbose application logs for development.
+		Leave disabled for production builds to reduce power consumption.
+
 source "Kconfig.zephyr"

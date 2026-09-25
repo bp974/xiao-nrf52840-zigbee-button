@@ -52,8 +52,8 @@ on conversation history.
 - [ ] Add a documented factory-reset procedure, preferably using a deliberate
       long-press gesture that cannot be triggered accidentally.
 - [ ] Add Zigbee Identify support to the converter and application behavior.
-- [ ] Provide a production logging profile with UART/console logging disabled.
-- [ ] Provide a simple debug-build option to re-enable UART logging without
+- [x] Provide a production logging profile with UART/console logging disabled.
+- [x] Provide a simple debug-build option to re-enable UART logging without
       changing application behavior.
 - [ ] Confirm that the production profile does not leave development logging,
       LEDs, or other avoidable loads enabled.

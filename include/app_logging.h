@@ -1,0 +1,12 @@
+#ifndef XIAO_APP_LOGGING_H
+#define XIAO_APP_LOGGING_H
+
+#include <zephyr/logging/log.h>
+
+#if defined(CONFIG_XIAO_ZIGBEE_DEBUG_LOGGING) && CONFIG_XIAO_ZIGBEE_DEBUG_LOGGING
+#define XIAO_ZIGBEE_LOG_LEVEL LOG_LEVEL_DBG
+#else
+#define XIAO_ZIGBEE_LOG_LEVEL LOG_LEVEL_NONE
+#endif
+
+#endif /* XIAO_APP_LOGGING_H */
