@@ -40,11 +40,11 @@ on conversation history.
 - [x] Notify the Zigbee app-utils layer on button activity for wake/rejoin
       handling.
 - [ ] Move the first battery sample/report to a wake-aware flow.
-- [ ] Disable or minimize the battery-divider current during sleep if safe for
-      the XIAO hardware.
+- [x] Evaluate battery-divider shutdown. Keep P0.14 low because disabling the
+      divider can expose P0.31 to VBAT and exceed its 3.6 V input limit.
 - [x] Confirm button GPIO wake from sleep.
-- [ ] Confirm network state persists across sleep and reset.
-- [ ] Confirm a button wake does not force a rejoin.
+- [x] Confirm network state persists across sleep and reset.
+- [x] Confirm a button wake does not force a rejoin.
 - [ ] Measure awake, joined-idle, sleepy-idle, and transmit current.
 
 ## Remote behavior (low priority)

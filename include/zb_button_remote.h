@@ -1,7 +1,7 @@
 #ifndef ZB_BUTTON_REMOTE_H
 #define ZB_BUTTON_REMOTE_H
 
-/* Endpoint and command destination match the ESP/Zigbee2MQTT implementation. */
+/* Endpoint and command destination used by the current Zigbee2MQTT setup. */
 #define BUTTON_REMOTE_ENDPOINT 10
 #define BUTTON_REMOTE_COORDINATOR 0x0000
 #define BUTTON_REMOTE_COORDINATOR_ENDPOINT 1

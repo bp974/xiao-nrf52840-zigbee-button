@@ -1,15 +1,15 @@
 # XIAO nRF52840 Zigbee Button
 
-Working Zigbee baseline for the non-Sense Seeed XIAO nRF52840 using:
+Battery-powered Zigbee button for the Seeed XIAO nRF52840 using:
 
 - nRF Connect SDK 2.6.0
 - Zephyr board `xiao_ble`
-- a small standalone Zigbee button application
+- a standalone Zephyr Zigbee application
+- Zigbee2MQTT and Home Assistant integration
 
-This application currently detects one button's single and double presses. It
-keeps the known-good commissioning, USB logging, and persistent Zigbee state as
-a stable starting point. The detected actions are logged locally until a
-generic Zigbee action representation is selected.
+The application supports a single button with single, double, hold, and release
+gestures. It operates as a sleepy Zigbee end device, preserves network state,
+reports battery percentage, and reports exact battery voltage in millivolts.
 
 ## Build
 
@@ -67,7 +67,7 @@ The same overlay selects `timer2` for the Zigbee timer. The extra crypto and
 MPSL settings are in `prj.conf`.
 
 The button actions are sent using the standard Zigbee clusters expected by the
-project's Zigbee2MQTT converter:
+project's nRF-only Zigbee2MQTT converter (`broskie_zigbee_button.mjs`):
 
 | Gesture | Zigbee command | Converter action |
 |---|---|---|
@@ -79,10 +79,25 @@ project's Zigbee2MQTT converter:
 The button backend is interrupt-driven; debounce, gesture timing, and command
 submission are asynchronous so they do not block the Zigbee stack.
 
-See `docs/NEXT_STEPS.md` for the planned low-power two-button evolution.
+## Battery reporting
+
+The XIAO divider is enabled safely through P0.14 and sampled every six hours.
+The standard Power Configuration cluster provides battery percentage and coarse
+100 mV voltage. Basic cluster attribute `0xFF01` provides the exact measured
+voltage in millivolts for Zigbee2MQTT and Home Assistant.
+
+The converter exposes the exact value as the diagnostic `voltage` entity.
+
+## Sleepy operation
+
+The device sleeps when the Zigbee stack is idle and wakes from the button GPIO.
+The Zigbee connection and persistent network state remain intact across sleep;
+button gestures are processed after wake without requiring a rejoin.
+
+See `docs/ROADMAP.md` for current decisions and future work.
 
 ## Repository layout
 
-This is a standalone Zephyr application. The Nordic sample source needed for
-the current baseline is maintained in `src/` and `include/`; no generated
-`app/` directory or copy/bootstrap step is required.
+This is a standalone Zephyr application. Source code is maintained in `src/`
+and `include/`; no generated `app/` directory or copy/bootstrap step is
+required.
