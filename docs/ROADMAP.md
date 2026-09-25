@@ -62,8 +62,8 @@ on conversation history.
 - [x] Set periodic battery sampling/reporting to every 6 hours.
 - [x] Keep six-hour reporting as the final battery policy; button-triggered
       measurements are intentionally not required.
-- [ ] Configure standard Zigbee battery reporting with an appropriate minimum
-      interval, maximum interval, and percentage-change threshold.
+- [x] Configure standard Zigbee battery percentage reporting through the
+      Zigbee2MQTT converter defaults.
 - [x] Add exact millivolt telemetry through a `genBasic` `0xFF01` attribute,
       not the Level Control command.
 
