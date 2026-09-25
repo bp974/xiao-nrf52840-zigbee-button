@@ -67,7 +67,8 @@ The same overlay selects `timer2` for the Zigbee timer. The extra crypto and
 MPSL settings are in `prj.conf`.
 
 The button actions are sent using the standard Zigbee clusters expected by the
-project's nRF-only Zigbee2MQTT converter (`broskie_zigbee_button.mjs`):
+project's nRF-only Zigbee2MQTT converter
+(`zigbee2mqtt/broskie_zigbee_button.mjs`):
 
 | Gesture | Zigbee command | Converter action |
 |---|---|---|
@@ -87,6 +88,14 @@ The standard Power Configuration cluster provides battery percentage and coarse
 voltage in millivolts for Zigbee2MQTT and Home Assistant.
 
 The converter exposes the exact value as the diagnostic `voltage` entity.
+
+Copy the converter to Zigbee2MQTT's `external_converters` directory, or
+configure the repository path directly:
+
+```yaml
+external_converters:
+  - zigbee2mqtt/broskie_zigbee_button.mjs
+```
 
 ## Sleepy operation
 

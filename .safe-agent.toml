@@ -1,3 +1,7 @@
+# Safe Agent workspace configuration. It makes the host's read-only Nordic
+# Connect SDK available at the same path inside the agent environment.
+# Documentation and source: https://github.com/bp974/safe-agent
+
 [[mounts]]
 host = "/opt/nordic"
 container = "/opt/nordic"

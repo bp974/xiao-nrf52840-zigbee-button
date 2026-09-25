@@ -26,7 +26,6 @@ on conversation history.
 
 ## Current follow-up
 
-- [ ] Confirm standard `genPowerCfg` reports are visible in Z2M after reconfigure.
 - [x] Add exact millivolt battery reporting through `genBasic` attribute
       `0xFF01` while retaining the standard 100 mV Zigbee voltage field.
 - [x] Keep the final nRF converter independent from the ESP-specific voltage
@@ -39,7 +38,6 @@ on conversation history.
 - [x] Enable sleepy end-device behavior before Zigbee startup.
 - [x] Notify the Zigbee app-utils layer on button activity for wake/rejoin
       handling.
-- [ ] Move the first battery sample/report to a wake-aware flow.
 - [x] Evaluate battery-divider shutdown. Keep P0.14 low because disabling the
       divider can expose P0.31 to VBAT and exceed its 3.6 V input limit.
 - [x] Confirm button GPIO wake from sleep.
