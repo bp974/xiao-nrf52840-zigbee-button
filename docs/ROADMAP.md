@@ -31,6 +31,8 @@ on conversation history.
       `0xFF01` while retaining the standard 100 mV Zigbee voltage field.
 - [x] Keep the final nRF converter independent from the ESP-specific voltage
       converter.
+- [x] Validate sleepy wake responsiveness and single/double/hold/release
+      actions in overnight testing.
 
 ## Sleepy end-device work
 
@@ -40,15 +42,16 @@ on conversation history.
 - [ ] Move the first battery sample/report to a wake-aware flow.
 - [ ] Disable or minimize the battery-divider current during sleep if safe for
       the XIAO hardware.
-- [ ] Confirm button GPIO wake from sleep.
+- [x] Confirm button GPIO wake from sleep.
 - [ ] Confirm network state persists across sleep and reset.
 - [ ] Confirm a button wake does not force a rejoin.
 - [ ] Measure awake, joined-idle, sleepy-idle, and transmit current.
 
-## Remote behavior
+## Remote behavior (low priority)
 
 - [ ] Replace direct coordinator addressing with Zigbee binding or group
-      addressing where appropriate.
+      addressing where appropriate. This is a nice-to-have and should not
+      block the current implementation.
 - [ ] Add the second physical button.
 - [ ] Define final single, double, and long-press actions for both buttons.
 - [ ] Add exact Z2M/Home Assistant action semantics if standard commands are
@@ -59,12 +62,8 @@ on conversation history.
 - [ ] Calibrate ADC divider measurements against a multimeter.
 - [ ] Confirm battery percentage curve for the selected cell chemistry.
 - [x] Set periodic battery sampling/reporting to every 6 hours.
-- [ ] Complete the sleepy-device battery reporting policy:
-  - report after startup, join, or rejoin;
-  - measure on button interaction when the last measurement is older than
-    approximately one hour;
-  - report periodically every 6–12 hours;
-  - report sooner when the battery percentage drops meaningfully.
+- [x] Keep six-hour reporting as the final battery policy; button-triggered
+      measurements are intentionally not required.
 - [ ] Configure standard Zigbee battery reporting with an appropriate minimum
       interval, maximum interval, and percentage-change threshold.
 - [x] Add exact millivolt telemetry through a `genBasic` `0xFF01` attribute,
