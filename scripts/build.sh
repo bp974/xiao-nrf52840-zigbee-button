@@ -12,6 +12,17 @@ fi
 echo "Building XIAO nRF52840 Zigbee button..."
 echo
 
+# CMake caches the absolute source path. Remove a generated build directory
+# left behind after the repository itself has been renamed or moved.
+if [[ -f "$ROOT/build/CMakeCache.txt" ]]; then
+    CACHED_SOURCE="$(sed -n 's/^CMAKE_HOME_DIRECTORY:INTERNAL=//p' \
+        "$ROOT/build/CMakeCache.txt")"
+    if [[ -n "$CACHED_SOURCE" && "$CACHED_SOURCE" != "$ROOT" ]]; then
+        echo "Removing build cache from a different source path: $CACHED_SOURCE"
+        rm -rf "$ROOT/build"
+    fi
+fi
+
 BUILD_OPTIONS=()
 if [[ "${DEBUG_LOGGING:-0}" == "1" ]]; then
     BUILD_OPTIONS+=("-DOVERLAY_CONFIG=prj_debug.conf")
