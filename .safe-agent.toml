@@ -1,0 +1,4 @@
+[[mounts]]
+host = "/opt/nordic"
+container = "/opt/nordic"
+mode = "ro"
