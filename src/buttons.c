@@ -35,10 +35,12 @@ static button_action_handler_t action_handler;
 static struct button_context button_contexts[BUTTON_COUNT] = {
 	[BUTTON_ID_1] = {.mask = DK_BTN1_MSK,
 		.last_transition_ms = -BUTTON_DEBOUNCE_MS},
+#if CONFIG_XIAO_ZIGBEE_THREE_BUTTON
 	[BUTTON_ID_2] = {.mask = DK_BTN2_MSK,
 		.last_transition_ms = -BUTTON_DEBOUNCE_MS},
 	[BUTTON_ID_3] = {.mask = DK_BTN3_MSK,
 		.last_transition_ms = -BUTTON_DEBOUNCE_MS},
+#endif
 };
 
 static void emit_action(struct button_context *context,
