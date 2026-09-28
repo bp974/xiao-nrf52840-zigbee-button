@@ -133,6 +133,17 @@ external_converters:
   - zigbee2mqtt/broskie_zigbee_button.mjs
 ```
 
+## Home Assistant blueprints
+
+The repository includes separate blueprints for each firmware variant:
+
+- `home-assistant/blueprints/broskie-zigbee-button.yaml` for the single-button firmware
+- `home-assistant/blueprints/broskie-zigbee-3button.yaml` for the three-button firmware
+
+Copy the appropriate YAML file into Home Assistant's
+`config/blueprints/automation/` directory, reload automations, and create an
+automation from the imported blueprint.
+
 ## Sleepy operation
 
 The device sleeps when the Zigbee stack is idle and wakes from the button GPIO.

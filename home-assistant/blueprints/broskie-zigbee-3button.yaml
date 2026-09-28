@@ -1,0 +1,228 @@
+blueprint:
+  name: Broskie Zigbee 3-Button
+  description: >
+    Automation blueprint for the Broskie Applications three-button Zigbee
+    remote. Supports single press, double press, long press, and release for
+    each button.
+  domain: automation
+
+  input:
+    remote:
+      name: Zigbee 3-Button Remote
+      description: Select the Broskie three-button Zigbee remote to use.
+      selector:
+        device:
+          integration: mqtt
+
+    button_1_single:
+      name: Button 1 - Single Press
+      default: []
+      selector:
+        action: {}
+
+    button_1_double:
+      name: Button 1 - Double Press
+      default: []
+      selector:
+        action: {}
+
+    button_1_hold:
+      name: Button 1 - Long Press
+      default: []
+      selector:
+        action: {}
+
+    button_1_release:
+      name: Button 1 - Release
+      default: []
+      selector:
+        action: {}
+
+    button_2_single:
+      name: Button 2 - Single Press
+      default: []
+      selector:
+        action: {}
+
+    button_2_double:
+      name: Button 2 - Double Press
+      default: []
+      selector:
+        action: {}
+
+    button_2_hold:
+      name: Button 2 - Long Press
+      default: []
+      selector:
+        action: {}
+
+    button_2_release:
+      name: Button 2 - Release
+      default: []
+      selector:
+        action: {}
+
+    button_3_single:
+      name: Button 3 - Single Press
+      default: []
+      selector:
+        action: {}
+
+    button_3_double:
+      name: Button 3 - Double Press
+      default: []
+      selector:
+        action: {}
+
+    button_3_hold:
+      name: Button 3 - Long Press
+      default: []
+      selector:
+        action: {}
+
+    button_3_release:
+      name: Button 3 - Release
+      default: []
+      selector:
+        action: {}
+
+mode: restart
+max_exceeded: silent
+
+triggers:
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: button_1_single
+    id: button_1_single
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: button_1_double
+    id: button_1_double
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: button_1_hold
+    id: button_1_hold
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: button_1_release
+    id: button_1_release
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: button_2_single
+    id: button_2_single
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: button_2_double
+    id: button_2_double
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: button_2_hold
+    id: button_2_hold
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: button_2_release
+    id: button_2_release
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: button_3_single
+    id: button_3_single
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: button_3_double
+    id: button_3_double
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: button_3_hold
+    id: button_3_hold
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: button_3_release
+    id: button_3_release
+
+conditions: []
+
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: button_1_single
+        sequence: !input button_1_single
+      - conditions:
+          - condition: trigger
+            id: button_1_double
+        sequence: !input button_1_double
+      - conditions:
+          - condition: trigger
+            id: button_1_hold
+        sequence: !input button_1_hold
+      - conditions:
+          - condition: trigger
+            id: button_1_release
+        sequence: !input button_1_release
+      - conditions:
+          - condition: trigger
+            id: button_2_single
+        sequence: !input button_2_single
+      - conditions:
+          - condition: trigger
+            id: button_2_double
+        sequence: !input button_2_double
+      - conditions:
+          - condition: trigger
+            id: button_2_hold
+        sequence: !input button_2_hold
+      - conditions:
+          - condition: trigger
+            id: button_2_release
+        sequence: !input button_2_release
+      - conditions:
+          - condition: trigger
+            id: button_3_single
+        sequence: !input button_3_single
+      - conditions:
+          - condition: trigger
+            id: button_3_double
+        sequence: !input button_3_double
+      - conditions:
+          - condition: trigger
+            id: button_3_hold
+        sequence: !input button_3_hold
+      - conditions:
+          - condition: trigger
+            id: button_3_release
+        sequence: !input button_3_release
