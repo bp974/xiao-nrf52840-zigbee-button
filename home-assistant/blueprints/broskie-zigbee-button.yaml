@@ -1,0 +1,98 @@
+blueprint:
+  name: Broskie Zigbee Button
+  description: >
+    Automation blueprint for the Broskie Applications Zigbee Button.
+    Supports single press, double press, long press, and release actions.
+  domain: automation
+
+  input:
+    remote:
+      name: Zigbee Button
+      description: Select the Broskie Zigbee Button to use.
+      selector:
+        device:
+          integration: mqtt
+
+    button_1_single:
+      name: Button 1 - Single Press
+      description: Action to run when Button 1 is pressed once.
+      default: []
+      selector:
+        action: {}
+
+    button_1_double:
+      name: Button 1 - Double Press
+      description: Action to run when Button 1 is pressed twice.
+      default: []
+      selector:
+        action: {}
+
+    button_1_hold:
+      name: Button 1 - Long Press
+      description: Action to run when Button 1 is held.
+      default: []
+      selector:
+        action: {}
+
+    button_1_release:
+      name: Button 1 - Release
+      description: Action to run when Button 1 is released after a long press.
+      default: []
+      selector:
+        action: {}
+
+mode: restart
+max_exceeded: silent
+
+triggers:
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: single
+    id: button_1_single
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: double
+    id: button_1_double
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: hold
+    id: button_1_hold
+
+  - trigger: device
+    domain: mqtt
+    device_id: !input remote
+    type: action
+    subtype: release
+    id: button_1_release
+
+conditions: []
+
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: button_1_single
+        sequence: !input button_1_single
+
+      - conditions:
+          - condition: trigger
+            id: button_1_double
+        sequence: !input button_1_double
+
+      - conditions:
+          - condition: trigger
+            id: button_1_hold
+        sequence: !input button_1_hold
+
+      - conditions:
+          - condition: trigger
+            id: button_1_release
+        sequence: !input button_1_release
