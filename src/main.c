@@ -76,10 +76,8 @@ ZB_DECLARE_BUTTON_REMOTE_CLUSTER_LIST(
 ZB_DECLARE_BUTTON_REMOTE_BUTTON_CLUSTER_LIST(
 	button_remote_button_clusters,
 	basic_server_attr_list,
-	identify_server_attr_list);
-
-ZB_DECLARE_SIMPLE_DESC(BUTTON_REMOTE_BUTTON_IN_CLUSTER_NUM,
-	BUTTON_REMOTE_BUTTON_OUT_CLUSTER_NUM);
+	identify_server_attr_list,
+	battery_power_config_attr_list);
 
 static zb_zcl_reporting_info_t button_remote_reporting_info[
 	BUTTON_REMOTE_REPORTING_SLOT_COUNT];
