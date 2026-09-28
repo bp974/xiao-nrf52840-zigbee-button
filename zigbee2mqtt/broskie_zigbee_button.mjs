@@ -3,14 +3,43 @@ import * as exposes from 'zigbee-herdsman-converters/lib/exposes';
 import * as reporting from 'zigbee-herdsman-converters/lib/reporting';
 
 const e = exposes.presets;
-const buttonNames = ['button_1', 'button_2', 'button_3'];
-const gestureNames = ['single', 'double', 'hold', 'release'];
-const actionNames = buttonNames.flatMap((button) =>
-    gestureNames.map((gesture) => `${button}_${gesture}`));
+const gestures = ['single', 'double', 'hold', 'release'];
 
-const buttonActions = {
+const gestureConverters = (threeButton) => [
+    {
+        cluster: 'genOnOff',
+        type: ['commandToggle', 'commandOn'],
+        convert: (model, msg) => {
+            const gesture = msg.type === 'commandToggle' ? 'single' : 'double';
+
+            if (!threeButton) {
+                return msg.endpoint.ID === 10 ? {action: gesture} : undefined;
+            }
+
+            return {action: `button_${msg.endpoint.ID - 9}_${gesture}`};
+        },
+    },
+    {
+        cluster: 'genLevelCtrl',
+        type: ['commandMove', 'commandStop'],
+        convert: (model, msg) => {
+            const gesture = msg.type === 'commandMove' ? 'hold' : 'release';
+
+            if (!threeButton) {
+                return msg.endpoint.ID === 10 ? {action: gesture} : undefined;
+            }
+
+            return {action: `button_${msg.endpoint.ID - 9}_${gesture}`};
+        },
+    },
+];
+
+const createButtonExtend = (threeButton) => ({
     exposes: [
-        e.action(actionNames),
+        e.action(threeButton
+            ? [1, 2, 3].flatMap((button) =>
+                gestures.map((gesture) => `button_${button}_${gesture}`))
+            : gestures),
         e.numeric('voltage', exposes.access.STATE)
             .withUnit('mV')
             .withDescription('Voltage of the battery in millivolts')
@@ -18,38 +47,7 @@ const buttonActions = {
     ],
 
     fromZigbee: [
-        // Gesture commands sent by the nRF52840 firmware.
-        {
-            cluster: 'genOnOff',
-            type: ['commandToggle', 'commandOn'],
-            convert: (model, msg) => {
-                const button = `button_${msg.endpoint.ID - 9}`;
-
-                if (msg.type === 'commandToggle') {
-                    return {action: `${button}_single`};
-                }
-
-                if (msg.type === 'commandOn') {
-                    return {action: `${button}_double`};
-                }
-            },
-        },
-        {
-            cluster: 'genLevelCtrl',
-            type: ['commandMove', 'commandStop'],
-            convert: (model, msg) => {
-                const button = `button_${msg.endpoint.ID - 9}`;
-
-                if (msg.type === 'commandMove') {
-                    return {action: `${button}_hold`};
-                }
-
-                if (msg.type === 'commandStop') {
-                    return {action: `${button}_release`};
-                }
-
-            },
-        },
+        ...gestureConverters(threeButton),
         {
             // Exact nRF battery voltage in millivolts from Basic 0xFF01.
             cluster: 'genBasic',
@@ -68,8 +66,7 @@ const buttonActions = {
         async (device, coordinatorEndpoint) => {
             const endpoint = device.getEndpoint(10);
             const reportingConfiguration = [{
-                // Unknown attributes must include their ZCL data type so
-                // zigbee-herdsman can build the configure-reporting request.
+                // Unknown attributes must include their ZCL data type.
                 attribute: {ID: 0xFF01, type: 0x21}, // uint16
                 minimumReportInterval: 0,
                 maximumReportInterval: 21600,
@@ -83,20 +80,23 @@ const buttonActions = {
     ],
 
     isModernExtend: true,
-};
+});
 
-export default {
-    fingerprint: [
-        {
-            modelID: 'XIAO-Zigbee-Button',
-            manufacturerName: 'Broskie Applications',
-        },
-    ],
-    model: 'XIAO-Zigbee-Button',
+const createConverter = (modelID, threeButton) => ({
+    fingerprint: [{
+        modelID,
+        manufacturerName: 'Broskie Applications',
+    }],
+    model: modelID,
     vendor: 'Broskie Applications',
-    description: 'Zigbee three-button remote',
+    description: threeButton ? 'Zigbee three-button remote' : 'Zigbee single button',
     extend: [
-        buttonActions,
+        createButtonExtend(threeButton),
         m.battery(),
     ],
-};
+});
+
+export default [
+    createConverter('XIAO-Zigbee-Button', false),
+    createConverter('XIAO-Zigbee-3Button', true),
+];

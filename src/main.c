@@ -73,22 +73,25 @@ ZB_DECLARE_BUTTON_REMOTE_CLUSTER_LIST(
 	identify_server_attr_list,
 	battery_power_config_attr_list);
 
+static zb_zcl_reporting_info_t button_remote_reporting_info[
+	BUTTON_REMOTE_REPORTING_SLOT_COUNT];
+
+ZB_DECLARE_BUTTON_REMOTE_EP(button_remote_ep, button_remote_clusters);
+#if CONFIG_XIAO_ZIGBEE_THREE_BUTTON
 ZB_DECLARE_BUTTON_REMOTE_BUTTON_CLUSTER_LIST(
 	button_remote_button_clusters,
 	basic_server_attr_list,
 	identify_server_attr_list,
 	battery_power_config_attr_list);
-
-static zb_zcl_reporting_info_t button_remote_reporting_info[
-	BUTTON_REMOTE_REPORTING_SLOT_COUNT];
-
-ZB_DECLARE_BUTTON_REMOTE_EP(button_remote_ep, button_remote_clusters);
 ZB_DECLARE_BUTTON_REMOTE_BUTTON_EP(button_remote_ep_2,
 	BUTTON_REMOTE_BUTTON_2_ENDPOINT, button_remote_button_clusters);
 ZB_DECLARE_BUTTON_REMOTE_BUTTON_EP(button_remote_ep_3,
 	BUTTON_REMOTE_BUTTON_3_ENDPOINT, button_remote_button_clusters);
 ZBOSS_DECLARE_DEVICE_CTX_3_EP(button_remote_ctx, button_remote_ep,
 	button_remote_ep_2, button_remote_ep_3);
+#else
+ZBOSS_DECLARE_DEVICE_CTX_1_EP(button_remote_ctx, button_remote_ep);
+#endif
 
 static void app_clusters_attr_init(void)
 {
@@ -100,8 +103,15 @@ static void app_clusters_attr_init(void)
 	dev_ctx.basic_attr.location_id[0] = 0;
 	ZB_ZCL_SET_STRING_VAL(dev_ctx.basic_attr.mf_name,
 		"Broskie Applications", ZB_ZCL_STRING_CONST_SIZE("Broskie Applications"));
+#if CONFIG_XIAO_ZIGBEE_THREE_BUTTON
 	ZB_ZCL_SET_STRING_VAL(dev_ctx.basic_attr.model_id,
-		"XIAO-Zigbee-Button", ZB_ZCL_STRING_CONST_SIZE("XIAO-Zigbee-Button"));
+		"XIAO-Zigbee-3Button",
+		ZB_ZCL_STRING_CONST_SIZE("XIAO-Zigbee-3Button"));
+#else
+	ZB_ZCL_SET_STRING_VAL(dev_ctx.basic_attr.model_id,
+		"XIAO-Zigbee-Button",
+		ZB_ZCL_STRING_CONST_SIZE("XIAO-Zigbee-Button"));
+#endif
 	ZB_ZCL_SET_STRING_VAL(dev_ctx.basic_attr.sw_ver,
 		"1", ZB_ZCL_STRING_CONST_SIZE("1"));
 	dev_ctx.basic_attr.power_source = ZB_ZCL_BASIC_POWER_SOURCE_BATTERY;

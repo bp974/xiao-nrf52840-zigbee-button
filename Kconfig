@@ -7,4 +7,12 @@ config XIAO_ZIGBEE_DEBUG_LOGGING
 		Enable UART console logging and verbose application logs for development.
 		Leave disabled for production builds to reduce power consumption.
 
+config XIAO_ZIGBEE_THREE_BUTTON
+	bool "Build three-button firmware"
+	default n
+	help
+		Build the D1/D2/D3 three-button variant with Zigbee endpoints 10,
+		11, and 12. Leave disabled for the single-button variant, which
+		uses endpoint 10 and model ID XIAO-Zigbee-Button.
+
 source "Kconfig.zephyr"

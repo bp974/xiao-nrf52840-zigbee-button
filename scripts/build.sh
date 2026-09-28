@@ -24,8 +24,26 @@ if [[ -f "$ROOT/build/CMakeCache.txt" ]]; then
 fi
 
 BUILD_OPTIONS=()
+case "${BUTTON_VARIANT:-single}" in
+    single)
+        echo "Building single-button variant."
+        ;;
+    3|three)
+        BUILD_OPTIONS+=(-DOVERLAY_CONFIG=prj_3button.conf)
+        echo "Building three-button variant."
+        ;;
+    *)
+        echo "BUTTON_VARIANT must be 'single' or '3'." >&2
+        exit 2
+        ;;
+esac
+
 if [[ "${DEBUG_LOGGING:-0}" == "1" ]]; then
-    BUILD_OPTIONS+=("-DOVERLAY_CONFIG=prj_debug.conf")
+    if [[ "${BUTTON_VARIANT:-single}" == "single" ]]; then
+        BUILD_OPTIONS+=(-DOVERLAY_CONFIG=prj_debug.conf)
+    else
+        BUILD_OPTIONS[0]='-DOVERLAY_CONFIG=prj_3button.conf prj_debug.conf'
+    fi
     echo "Debug UART logging enabled."
 fi
 

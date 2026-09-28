@@ -7,9 +7,10 @@ Battery-powered Zigbee button for the Seeed XIAO nRF52840 using:
 - a standalone Zephyr Zigbee application
 - Zigbee2MQTT and Home Assistant integration
 
-The application supports three buttons with single, double, hold, and release
-gestures. It operates as a sleepy Zigbee end device, preserves network state,
-reports battery percentage, and reports exact battery voltage in millivolts.
+The application supports single-button and three-button hardware variants with
+single, double, hold, and release gestures. It operates as a sleepy Zigbee end
+device, preserves network state, reports battery percentage, and reports exact
+battery voltage in millivolts.
 
 ## Build
 
@@ -19,11 +20,24 @@ Use an NCS 2.6.0 shell, then run:
 ./scripts/build.sh
 ```
 
+By default this builds the single-button firmware. Build the three-button
+firmware with:
+
+```bash
+BUTTON_VARIANT=3 ./scripts/build.sh
+```
+
 Production builds disable the UART console and application logging. To build a
 development image with verbose serial logging enabled, run:
 
 ```bash
 DEBUG_LOGGING=1 ./scripts/build.sh
+```
+
+For a three-button debug image, combine the options:
+
+```bash
+BUTTON_VARIANT=3 DEBUG_LOGGING=1 ./scripts/build.sh
 ```
 
 The output is written to `build/`. The UF2 image is
@@ -63,8 +77,10 @@ and ELF address.
 
 ## XIAO buttons
 
-Connect one momentary button between each listed XIAO pin and GND. The overlay
-enables the nRF52840 internal pull-ups, so the buttons are active low:
+Connect a momentary button between D1 and GND for the single-button variant.
+For the three-button variant, connect buttons between each listed pin and GND.
+The overlay enables the nRF52840 internal pull-ups, so the buttons are active
+low:
 
 | Function | XIAO pin | MCU pin |
 |---|---|---|
@@ -79,17 +95,23 @@ The button actions are sent using the standard Zigbee clusters expected by the
 project's nRF-only Zigbee2MQTT converter
 (`zigbee2mqtt/broskie_zigbee_button.mjs`):
 
-| Button gesture | Zigbee endpoint | Zigbee command | Converter action |
+| Variant | Gesture | Zigbee endpoint | Converter action |
 |---|---:|---|---|
-| Button 1 single | 10 | On/Off Toggle | `button_1_single` |
-| Button 2 single | 11 | On/Off Toggle | `button_2_single` |
-| Button 3 single | 12 | On/Off Toggle | `button_3_single` |
-| Any double | 10/11/12 | On/Off On | `button_N_double` |
-| Any long press | 10/11/12 | Level Control Move Up | `button_N_hold` |
-| Any release after long press | 10/11/12 | Level Control Stop | `button_N_release` |
+| Single | Single | 10 | `single` |
+| Single | Double | 10 | `double` |
+| Single | Long press | 10 | `hold` |
+| Single | Long-press release | 10 | `release` |
+| Three-button | Button 1 single | 10 | `button_1_single` |
+| Three-button | Button 2 single | 11 | `button_2_single` |
+| Three-button | Button 3 single | 12 | `button_3_single` |
+| Three-button | Button N double | 10/11/12 | `button_N_double` |
+| Three-button | Button N long press | 10/11/12 | `button_N_hold` |
+| Three-button | Button N release | 10/11/12 | `button_N_release` |
 
-The firmware exposes one Zigbee endpoint per button: 10, 11, and 12. This lets
-Zigbee2MQTT identify the physical button that generated each gesture.
+The single-button firmware uses model ID `XIAO-Zigbee-Button`. The three-button
+firmware uses model ID `XIAO-Zigbee-3Button` and exposes one Zigbee endpoint per
+button: 10, 11, and 12. Separate model IDs let Zigbee2MQTT expose only the
+actions that exist on each hardware variant.
 
 The button backend is interrupt-driven; debounce, gesture timing, and command
 submission are asynchronous so they do not block the Zigbee stack.

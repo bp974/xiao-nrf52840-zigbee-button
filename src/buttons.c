@@ -10,7 +10,11 @@
 #include "app_logging.h"
 
 /* Tune these values after testing the physical switches and enclosure. */
+#if CONFIG_XIAO_ZIGBEE_THREE_BUTTON
 #define BUTTON_COUNT                3U
+#else
+#define BUTTON_COUNT                1U
+#endif
 #define BUTTON_DEBOUNCE_MS          30
 #define DOUBLE_PRESS_WINDOW_MS      350
 #define HOLD_TIME_MS                600
