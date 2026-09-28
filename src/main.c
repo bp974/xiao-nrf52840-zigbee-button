@@ -73,11 +73,24 @@ ZB_DECLARE_BUTTON_REMOTE_CLUSTER_LIST(
 	identify_server_attr_list,
 	battery_power_config_attr_list);
 
+ZB_DECLARE_BUTTON_REMOTE_BUTTON_CLUSTER_LIST(
+	button_remote_button_clusters,
+	basic_server_attr_list,
+	identify_server_attr_list);
+
+ZB_DECLARE_SIMPLE_DESC(BUTTON_REMOTE_BUTTON_IN_CLUSTER_NUM,
+	BUTTON_REMOTE_BUTTON_OUT_CLUSTER_NUM);
+
 static zb_zcl_reporting_info_t button_remote_reporting_info[
 	BUTTON_REMOTE_REPORTING_SLOT_COUNT];
 
 ZB_DECLARE_BUTTON_REMOTE_EP(button_remote_ep, button_remote_clusters);
-ZBOSS_DECLARE_DEVICE_CTX_1_EP(button_remote_ctx, button_remote_ep);
+ZB_DECLARE_BUTTON_REMOTE_BUTTON_EP(button_remote_ep_2,
+	BUTTON_REMOTE_BUTTON_2_ENDPOINT, button_remote_button_clusters);
+ZB_DECLARE_BUTTON_REMOTE_BUTTON_EP(button_remote_ep_3,
+	BUTTON_REMOTE_BUTTON_3_ENDPOINT, button_remote_button_clusters);
+ZBOSS_DECLARE_DEVICE_CTX_3_EP(button_remote_ctx, button_remote_ep,
+	button_remote_ep_2, button_remote_ep_3);
 
 static void app_clusters_attr_init(void)
 {

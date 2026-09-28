@@ -7,7 +7,7 @@ Battery-powered Zigbee button for the Seeed XIAO nRF52840 using:
 - a standalone Zephyr Zigbee application
 - Zigbee2MQTT and Home Assistant integration
 
-The application supports a single button with single, double, hold, and release
+The application supports three buttons with single, double, hold, and release
 gestures. It operates as a sleepy Zigbee end device, preserves network state,
 reports battery percentage, and reports exact battery voltage in millivolts.
 
@@ -61,14 +61,16 @@ Pass the actual mount point for a non-macOS host or a differently named volume.
 Do not replace this partition map without verifying the generated partitions
 and ELF address.
 
-## XIAO button
+## XIAO buttons
 
-Connect one momentary button between XIAO D1 and GND. The overlay enables the
-nRF52840 internal pull-up, so the button is active low:
+Connect one momentary button between each listed XIAO pin and GND. The overlay
+enables the nRF52840 internal pull-ups, so the buttons are active low:
 
 | Function | XIAO pin | MCU pin |
 |---|---|---|
 | Button 1 | D1 | P0.03 |
+| Button 2 | D2 | P0.28 |
+| Button 3 | D3 | P0.29 |
 
 The same overlay selects `timer2` for the Zigbee timer. The extra crypto and
 MPSL settings are in `prj.conf`.
@@ -77,12 +79,17 @@ The button actions are sent using the standard Zigbee clusters expected by the
 project's nRF-only Zigbee2MQTT converter
 (`zigbee2mqtt/broskie_zigbee_button.mjs`):
 
-| Gesture | Zigbee command | Converter action |
-|---|---|---|
-| Single press | On/Off Toggle | `single` |
-| Double press | On/Off On | `double` |
-| Long press | Level Control Move Up | `hold` |
-| Release after long press | Level Control Stop | `release` |
+| Button gesture | Zigbee endpoint | Zigbee command | Converter action |
+|---|---:|---|---|
+| Button 1 single | 10 | On/Off Toggle | `button_1_single` |
+| Button 2 single | 11 | On/Off Toggle | `button_2_single` |
+| Button 3 single | 12 | On/Off Toggle | `button_3_single` |
+| Any double | 10/11/12 | On/Off On | `button_N_double` |
+| Any long press | 10/11/12 | Level Control Move Up | `button_N_hold` |
+| Any release after long press | 10/11/12 | Level Control Stop | `button_N_release` |
+
+The firmware exposes one Zigbee endpoint per button: 10, 11, and 12. This lets
+Zigbee2MQTT identify the physical button that generated each gesture.
 
 The button backend is interrupt-driven; debounce, gesture timing, and command
 submission are asynchronous so they do not block the Zigbee stack.

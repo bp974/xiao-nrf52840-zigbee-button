@@ -3,6 +3,6 @@
 
 #include "buttons.h"
 
-void zigbee_actions_handle(enum button_action action);
+void zigbee_actions_handle(enum button_id button, enum button_action action);
 
 #endif /* XIAO_ZIGBEE_ACTIONS_H */

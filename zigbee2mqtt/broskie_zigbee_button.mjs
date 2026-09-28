@@ -3,10 +3,14 @@ import * as exposes from 'zigbee-herdsman-converters/lib/exposes';
 import * as reporting from 'zigbee-herdsman-converters/lib/reporting';
 
 const e = exposes.presets;
+const buttonNames = ['button_1', 'button_2', 'button_3'];
+const gestureNames = ['single', 'double', 'hold', 'release'];
+const actionNames = buttonNames.flatMap((button) =>
+    gestureNames.map((gesture) => `${button}_${gesture}`));
 
 const buttonActions = {
     exposes: [
-        e.action(['single', 'double', 'hold', 'release']),
+        e.action(actionNames),
         e.numeric('voltage', exposes.access.STATE)
             .withUnit('mV')
             .withDescription('Voltage of the battery in millivolts')
@@ -19,12 +23,14 @@ const buttonActions = {
             cluster: 'genOnOff',
             type: ['commandToggle', 'commandOn'],
             convert: (model, msg) => {
+                const button = `button_${msg.endpoint.ID - 9}`;
+
                 if (msg.type === 'commandToggle') {
-                    return {action: 'single'};
+                    return {action: `${button}_single`};
                 }
 
                 if (msg.type === 'commandOn') {
-                    return {action: 'double'};
+                    return {action: `${button}_double`};
                 }
             },
         },
@@ -32,12 +38,14 @@ const buttonActions = {
             cluster: 'genLevelCtrl',
             type: ['commandMove', 'commandStop'],
             convert: (model, msg) => {
+                const button = `button_${msg.endpoint.ID - 9}`;
+
                 if (msg.type === 'commandMove') {
-                    return {action: 'hold'};
+                    return {action: `${button}_hold`};
                 }
 
                 if (msg.type === 'commandStop') {
-                    return {action: 'release'};
+                    return {action: `${button}_release`};
                 }
 
             },
@@ -86,7 +94,7 @@ export default {
     ],
     model: 'XIAO-Zigbee-Button',
     vendor: 'Broskie Applications',
-    description: 'Zigbee single button',
+    description: 'Zigbee three-button remote',
     extend: [
         buttonActions,
         m.battery(),

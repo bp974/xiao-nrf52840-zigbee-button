@@ -5,7 +5,7 @@
         ncs,zigbee-timer = &timer2;
     };
 
-    /* Button 1: XIAO D1 / nRF52840 P0.03, active low to GND. */
+    /* Buttons: XIAO D1/D2/D3, active low to GND. */
 
     buttons {
         compatible = "gpio-keys";
@@ -14,10 +14,22 @@
             gpios = <&gpio0 3 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
             label = "Button 1";
         };
+
+        button1: button_1 {
+            gpios = <&gpio0 28 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+            label = "Button 2";
+        };
+
+        button2: button_2 {
+            gpios = <&gpio0 29 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+            label = "Button 3";
+        };
     };
 
     aliases {
         sw0 = &button0;
+        sw1 = &button1;
+        sw2 = &button2;
     };
 
     zephyr,user {
