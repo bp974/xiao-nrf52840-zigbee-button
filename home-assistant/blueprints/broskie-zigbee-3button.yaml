@@ -13,6 +13,9 @@ blueprint:
       selector:
         device:
           integration: mqtt
+          filter:
+            - manufacturer: Broskie Applications
+              model: XIAO-Zigbee-3Button
 
     button_1_single:
       name: Button 1 - Single Press
